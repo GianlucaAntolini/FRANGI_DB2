@@ -33,17 +33,11 @@ def writeLine(writerCD, rowSY, rowTF):
             "Description": rowSY["Description"],
             "Licensed": rowSY["Licensed"],
             "official_video": rowSY["official_video"],
-            "track_number": rowTF["track_number"]
-            if rowTF["track_number"] is not None
-            else "",
-            "disc_number": rowTF["disc_number"]
-            if rowTF["disc_number"] is not None
-            else "",
-            "explicit": rowTF["explicit"] if rowTF["explicit"] is not None else "",
-            "release_date": rowTF["release_date"]
-            if rowTF["release_date"] is not None
-            else "",
-            "album_id": rowTF["album_id"] if rowTF["album_id"] is not None else "",
+            "track_number": rowTF["track_number"] if rowTF is not None else "",
+            "disc_number": rowTF["disc_number"] if rowTF is not None else "",
+            "explicit": rowTF["explicit"] if rowTF is not None else "",
+            "release_date": rowTF["release_date"] if rowTF is not None else "",
+            "album_id": rowTF["album_id"] if rowTF is not None else "",
         }
     )
 
@@ -54,7 +48,7 @@ with open(
 ) as fileSY:
     readerSY = csv.DictReader(fileSY)
     with open(
-        "Datasets/Computed/tracks_features_sorted.csv", "r", newline=""
+        "Datasets/Computed/tracks_features_edited_sorted.csv", "r", newline=""
     ) as fileTF:
         readerTF = csv.DictReader(fileTF)
 
@@ -120,7 +114,6 @@ with open(
                         matchCount += 1
                         print("match")
                         foundMatch = True
-                        rowTFAlbum = rowTF["album"]
                         # write all the fields of youtube_spotify_with_id_sorted.csv plus the chosen
                         # fields of tracks_features_sorted.csv
                         writeLine(writerCD, rowSY, rowTF)
