@@ -4,6 +4,8 @@
 
 import pandas as pd
 
+print("Sorting tracks features data")
+
 # tracks_features file
 # Load the CSV file into a DataFrame
 df = pd.read_csv("Datasets/Computed/tracks_features_edited.csv")
@@ -14,6 +16,8 @@ df_sorted = df.sort_values(by="id")
 # Save the sorted DataFrame to a new CSV file
 df_sorted.to_csv("Datasets/Computed/tracks_features_edited_sorted.csv", index=False)
 
+
+print("Sorting Spotify-Youtube data")
 
 # Spotify_Youtube_with_id file
 # Load the CSV file into a DataFrame

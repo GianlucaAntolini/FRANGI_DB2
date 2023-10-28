@@ -5,12 +5,15 @@
 import csv
 import pandas as pd
 
+print("Writing Spotify-Youtube data")
+countRows = 0
 
 # Open and read the csv files
-with open("Datasets/Original/Spotify_Youtube.csv", "r", newline="") as fileSY:
+with open("Datasets/Original/Spotify_Youtube.csv", "r", encoding="utf8") as fileSY:
     readerSY = csv.DictReader(fileSY)
+    
     with open(
-        "Datasets/Computed/Spotify_Youtube_with_id.csv", "w", newline=""
+        "Datasets/Computed/Spotify_Youtube_with_id.csv", "w", encoding="utf8"
     ) as fileSYWI:
         # the same fields as the Spotify_Youtube.csv plus the id field
         fieldNamesSYWI = [
@@ -50,6 +53,7 @@ with open("Datasets/Original/Spotify_Youtube.csv", "r", newline="") as fileSY:
         writerSYWI.writeheader()
 
         for rowSY in readerSY:
+            countRows += 1
             trackIdSY = rowSY["Uri"].split(":")[2]
             # Write the data row to the output CSV file
             writerSYWI.writerow(
@@ -86,6 +90,8 @@ with open("Datasets/Original/Spotify_Youtube.csv", "r", newline="") as fileSY:
                 }
             )
 
+print("Founded", countRows, "rows")
+
 # using pandas remove from tracks_features.csv the columns we don't need so
 # at the end write the new file tracks_features_edited.csv
 # Load the CSV file into a DataFrame
@@ -114,6 +120,8 @@ df = df.drop(
         "year",
     ]
 )
+
+print("Writing tracks features data")
 
 # Save the sorted DataFrame to a new CSV file
 df.to_csv("Datasets/Computed/tracks_features_edited.csv", index=False)

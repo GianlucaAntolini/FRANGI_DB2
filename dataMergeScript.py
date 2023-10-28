@@ -1,4 +1,5 @@
 import csv
+import datetime;
 
 
 def writeLine(writerCD, rowSY, rowTF):
@@ -42,18 +43,20 @@ def writeLine(writerCD, rowSY, rowTF):
     )
 
 
+print("Starting...")
+
 # Open and read the csv files
 with open(
-    "Datasets/Computed/Spotify_Youtube_with_id_sorted.csv", "r", newline=""
+    "Datasets/Computed/Spotify_Youtube_with_id_sorted.csv", "r", encoding="utf8"
 ) as fileSY:
     readerSY = csv.DictReader(fileSY)
     with open(
-        "Datasets/Computed/tracks_features_edited_sorted.csv", "r", newline=""
+        "Datasets/Computed/tracks_features_edited_sorted.csv", "r", encoding="utf8"
     ) as fileTF:
         readerTF = csv.DictReader(fileTF)
 
         trackIdSY = ""
-        with open("Datasets/Computed/complete_dataset.csv", "w", newline="") as fileCD:
+        with open("Datasets/Computed/complete_dataset.csv", "w", encoding="utf8") as fileCD:
             fieldNamesCD = [
                 # added id field from spotify_youtube.csv (maybe not needed)
                 "id",
@@ -99,36 +102,47 @@ with open(
             writerCD.writeheader()
 
             matchCount = 0
-
+            totalrows = 20718
+            countRows = 0
+            
+            # convert dictReader to dict ('id' as key, full row as value)
+            TFdict = {}
+            for rowTF in readerTF:
+                TFdict[rowTF["id"]] = rowTF
+            
             for rowSY in readerSY:
+                if countRows % 5000 == 0:
+                    ct = datetime.datetime.now()
+                    print("Time:", ct)
+                    print("Progress:", str((countRows*100)/totalrows)[:4]+"%")
+                    print("Match over total:", str(matchCount)+"/"+str(countRows))
+                    print()
+                countRows += 1
+                
                 trackIdSY = rowSY["Uri"].split(":")[2]
-                print(trackIdSY)
+                # print(trackIdSY)
                 foundMatch = False
                 # for each row of the tracks_features.csv
                 trackIdTF = ""
-                for rowTF in readerTF:
-                    trackIdTF = rowTF["id"]
-
-                    # if the track id of the spotify_youtube.csv is equal to the track id of the tracks_features.csv
-                    if trackIdSY == trackIdTF:
-                        matchCount += 1
-                        print("match")
-                        foundMatch = True
-                        # write all the fields of youtube_spotify_with_id_sorted.csv plus the chosen
-                        # fields of tracks_features_sorted.csv
-                        writeLine(writerCD, rowSY, rowTF)
-
-                        # break inner loop
-                        break
+                
+                if trackIdSY in TFdict:
+                    matchCount += 1
+                    # print("match")
+                    foundMatch = True
+                    # write all the fields of youtube_spotify_with_id_sorted.csv plus the chosen
+                    # fields of tracks_features_sorted.csv
+                    writeLine(writerCD, rowSY, rowTF)
+                
                 # reset the readerTF
                 fileTF.seek(0)
                 # if we didn't find a match and the song is a single we can keep it with no album, else we discard it
                 if not foundMatch:
-                    print("no match")
+                    # print("no match")
                     if rowSY["Album_type"] == "single":
-                        print("no match with single")
+                        # print("no match with single")
                         writeLine(writerCD, rowSY, None)
                     else:
-                        print("no match with an album")
+                        # print("no match with an album")
+                        pass
 
     print("matchCount: ", matchCount)
