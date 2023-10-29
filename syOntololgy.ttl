@@ -1,0 +1,466 @@
+@prefix : <http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/> .
+
+<http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44> rdf:type owl:Ontology .
+
+#################################################################
+#    Datatypes
+#################################################################
+
+###  http://www.w3.org/2001/XMLSchema#date
+xsd:date rdf:type rdfs:Datatype .
+
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/belongsTo
+:belongsTo rdf:type owl:ObjectProperty ,
+                    owl:FunctionalProperty ;
+           rdfs:domain :SpotifySong ;
+           rdfs:range :Album .
+
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/hasType
+:hasType rdf:type owl:ObjectProperty ,
+                  owl:FunctionalProperty ;
+         rdfs:domain :Album ;
+         rdfs:range :AlbumType .
+
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/hasVideo
+:hasVideo rdf:type owl:ObjectProperty ;
+          owl:inverseOf :isVideoOf ;
+          rdf:type owl:InverseFunctionalProperty ;
+          rdfs:domain :SpotifySong ;
+          rdfs:range :YoutubeVideo .
+
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/isProducedBy
+:isProducedBy rdf:type owl:ObjectProperty ,
+                       owl:FunctionalProperty ;
+              rdfs:domain :Album ;
+              rdfs:range :Artist .
+
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/isPublishedBy
+:isPublishedBy rdf:type owl:ObjectProperty ;
+               owl:inverseOf :published .
+
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/isUploadedBy
+:isUploadedBy rdf:type owl:ObjectProperty ,
+                       owl:FunctionalProperty ;
+              rdfs:domain :YoutubeVideo ;
+              rdfs:range :YoutubeChannel .
+
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/isVideoOf
+:isVideoOf rdf:type owl:ObjectProperty .
+
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/published
+:published rdf:type owl:ObjectProperty ;
+           rdfs:domain :Artist ;
+           rdfs:range :SpotifySong .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/acousticness
+:acousticness rdf:type owl:DatatypeProperty ,
+                       owl:FunctionalProperty ;
+              rdfs:domain :SpotifySong ;
+              rdfs:range xsd:decimal .
+
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/comments
+:comments rdf:type owl:DatatypeProperty ,
+                   owl:FunctionalProperty ;
+          rdfs:domain :YoutubeVideo ;
+          rdfs:range xsd:integer .
+
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/danceability
+:danceability rdf:type owl:DatatypeProperty ,
+                       owl:FunctionalProperty ;
+              rdfs:domain :SpotifySong ;
+              rdfs:range xsd:decimal .
+
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/description
+:description rdf:type owl:DatatypeProperty ,
+                      owl:FunctionalProperty ;
+             rdfs:domain :YoutubeVideo ;
+             rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/durationms
+:durationms rdf:type owl:DatatypeProperty ,
+                     owl:FunctionalProperty ;
+            rdfs:domain :SpotifySong ;
+            rdfs:range xsd:integer .
+
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/energy
+:energy rdf:type owl:DatatypeProperty ,
+                 owl:FunctionalProperty ;
+        rdfs:domain :SpotifySong ;
+        rdfs:range xsd:decimal .
+
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/instrumentalness
+:instrumentalness rdf:type owl:DatatypeProperty ,
+                           owl:FunctionalProperty ;
+                  rdfs:domain :SpotifySong ;
+                  rdfs:range xsd:decimal .
+
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/key
+:key rdf:type owl:DatatypeProperty ,
+              owl:FunctionalProperty ;
+     rdfs:domain :SpotifySong ;
+     rdfs:range xsd:integer .
+
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/licensed
+:licensed rdf:type owl:DatatypeProperty ,
+                   owl:FunctionalProperty ;
+          rdfs:domain :YoutubeVideo ;
+          rdfs:range xsd:boolean .
+
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/likes
+:likes rdf:type owl:DatatypeProperty ,
+                owl:FunctionalProperty ;
+       rdfs:domain :YoutubeVideo ;
+       rdfs:range xsd:integer .
+
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/liveness
+:liveness rdf:type owl:DatatypeProperty ,
+                   owl:FunctionalProperty ;
+          rdfs:domain :SpotifySong ;
+          rdfs:range xsd:decimal .
+
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/ludness
+:ludness rdf:type owl:DatatypeProperty ,
+                  owl:FunctionalProperty ;
+         rdfs:domain :SpotifySong ;
+         rdfs:range xsd:integer .
+
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/officialVideo
+:officialVideo rdf:type owl:DatatypeProperty ,
+                        owl:FunctionalProperty ;
+               rdfs:domain :YoutubeVideo ;
+               rdfs:range xsd:boolean .
+
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/personName
+:personName rdf:type owl:DatatypeProperty ;
+            rdfs:domain :Person ;
+            rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/speechiness
+:speechiness rdf:type owl:DatatypeProperty ,
+                      owl:FunctionalProperty ;
+             rdfs:domain :SpotifySong ;
+             rdfs:range xsd:decimal .
+
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/stream
+:stream rdf:type owl:DatatypeProperty ,
+                 owl:FunctionalProperty ;
+        rdfs:domain :SpotifySong ;
+        rdfs:range xsd:integer .
+
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/tempobpm
+:tempobpm rdf:type owl:DatatypeProperty ,
+                   owl:FunctionalProperty ;
+          rdfs:domain :SpotifySong ;
+          rdfs:range xsd:decimal .
+
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/trackName
+:trackName rdf:type owl:DatatypeProperty ,
+                    owl:FunctionalProperty ;
+           rdfs:domain :SpotifySong ;
+           rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/valence
+:valence rdf:type owl:DatatypeProperty ,
+                  owl:FunctionalProperty ;
+         rdfs:domain :SpotifySong ;
+         rdfs:range xsd:decimal .
+
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/videoTitle
+:videoTitle rdf:type owl:DatatypeProperty ,
+                     owl:FunctionalProperty ;
+            rdfs:domain :YoutubeVideo ;
+            rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/views
+:views rdf:type owl:DatatypeProperty ,
+                owl:FunctionalProperty ;
+       rdfs:domain :YoutubeVideo ;
+       rdfs:range xsd:integer .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/Album
+:Album rdf:type owl:Class ;
+       owl:equivalentClass [ rdf:type owl:Restriction ;
+                             owl:onProperty :hasType ;
+                             owl:someValuesFrom :AlbumType
+                           ] .
+
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/AlbumType
+:AlbumType rdf:type owl:Class ;
+           owl:equivalentClass [ rdf:type owl:Class ;
+                                 owl:oneOf ( :Album
+                                             :Single
+                                           )
+                               ] .
+
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/Artist
+:Artist rdf:type owl:Class ;
+        owl:equivalentClass [ rdf:type owl:Restriction ;
+                              owl:onProperty :published ;
+                              owl:someValuesFrom :SpotifySong
+                            ] ;
+        rdfs:subClassOf :Person .
+
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/Person
+:Person rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/SpotifySong
+:SpotifySong rdf:type owl:Class ;
+             owl:equivalentClass [ owl:intersectionOf ( [ rdf:type owl:Restriction ;
+                                                          owl:onProperty :belongsTo ;
+                                                          owl:someValuesFrom :Album
+                                                        ]
+                                                        [ rdf:type owl:Restriction ;
+                                                          owl:onProperty :isPublishedBy ;
+                                                          owl:someValuesFrom :Artist
+                                                        ]
+                                                      ) ;
+                                   rdf:type owl:Class
+                                 ] ;
+             rdfs:subClassOf [ rdf:type owl:Restriction ;
+                               owl:onProperty :acousticness ;
+                               owl:someValuesFrom [ rdf:type rdfs:Datatype ;
+                                                    owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
+                                                                           owl:onDatatype xsd:decimal ;
+                                                                           owl:withRestrictions ( [ xsd:minInclusive 0.0
+                                                                                                  ]
+                                                                                                )
+                                                                         ]
+                                                                         [ rdf:type rdfs:Datatype ;
+                                                                           owl:onDatatype xsd:decimal ;
+                                                                           owl:withRestrictions ( [ xsd:maxInclusive 1.0
+                                                                                                  ]
+                                                                                                )
+                                                                         ]
+                                                                       )
+                                                  ]
+                             ] ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty :danceability ;
+                               owl:someValuesFrom [ rdf:type rdfs:Datatype ;
+                                                    owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
+                                                                           owl:onDatatype xsd:decimal ;
+                                                                           owl:withRestrictions ( [ xsd:minInclusive 0.0
+                                                                                                  ]
+                                                                                                )
+                                                                         ]
+                                                                         [ rdf:type rdfs:Datatype ;
+                                                                           owl:onDatatype xsd:decimal ;
+                                                                           owl:withRestrictions ( [ xsd:maxInclusive 1.0
+                                                                                                  ]
+                                                                                                )
+                                                                         ]
+                                                                       )
+                                                  ]
+                             ] ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty :energy ;
+                               owl:someValuesFrom [ rdf:type rdfs:Datatype ;
+                                                    owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
+                                                                           owl:onDatatype xsd:decimal ;
+                                                                           owl:withRestrictions ( [ xsd:minInclusive 0.0
+                                                                                                  ]
+                                                                                                )
+                                                                         ]
+                                                                         [ rdf:type rdfs:Datatype ;
+                                                                           owl:onDatatype xsd:decimal ;
+                                                                           owl:withRestrictions ( [ xsd:maxInclusive 1.0
+                                                                                                  ]
+                                                                                                )
+                                                                         ]
+                                                                       )
+                                                  ]
+                             ] ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty :instrumentalness ;
+                               owl:someValuesFrom [ rdf:type rdfs:Datatype ;
+                                                    owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
+                                                                           owl:onDatatype xsd:decimal ;
+                                                                           owl:withRestrictions ( [ xsd:minInclusive 0.0
+                                                                                                  ]
+                                                                                                )
+                                                                         ]
+                                                                         [ rdf:type rdfs:Datatype ;
+                                                                           owl:onDatatype xsd:decimal ;
+                                                                           owl:withRestrictions ( [ xsd:maxInclusive 1.0
+                                                                                                  ]
+                                                                                                )
+                                                                         ]
+                                                                       )
+                                                  ]
+                             ] ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty :liveness ;
+                               owl:someValuesFrom [ rdf:type rdfs:Datatype ;
+                                                    owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
+                                                                           owl:onDatatype xsd:decimal ;
+                                                                           owl:withRestrictions ( [ xsd:minInclusive 0.0
+                                                                                                  ]
+                                                                                                )
+                                                                         ]
+                                                                         [ rdf:type rdfs:Datatype ;
+                                                                           owl:onDatatype xsd:decimal ;
+                                                                           owl:withRestrictions ( [ xsd:maxInclusive 1.0
+                                                                                                  ]
+                                                                                                )
+                                                                         ]
+                                                                       )
+                                                  ]
+                             ] ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty :speechiness ;
+                               owl:someValuesFrom [ rdf:type rdfs:Datatype ;
+                                                    owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
+                                                                           owl:onDatatype xsd:decimal ;
+                                                                           owl:withRestrictions ( [ xsd:minInclusive 0.0
+                                                                                                  ]
+                                                                                                )
+                                                                         ]
+                                                                         [ rdf:type rdfs:Datatype ;
+                                                                           owl:onDatatype xsd:decimal ;
+                                                                           owl:withRestrictions ( [ xsd:maxInclusive 1.0
+                                                                                                  ]
+                                                                                                )
+                                                                         ]
+                                                                       )
+                                                  ]
+                             ] ,
+                             [ rdf:type owl:Restriction ;
+                               owl:onProperty :valence ;
+                               owl:someValuesFrom [ rdf:type rdfs:Datatype ;
+                                                    owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
+                                                                           owl:onDatatype xsd:decimal ;
+                                                                           owl:withRestrictions ( [ xsd:minInclusive 0.0
+                                                                                                  ]
+                                                                                                )
+                                                                         ]
+                                                                         [ rdf:type rdfs:Datatype ;
+                                                                           owl:onDatatype xsd:decimal ;
+                                                                           owl:withRestrictions ( [ xsd:maxInclusive 1.0
+                                                                                                  ]
+                                                                                                )
+                                                                         ]
+                                                                       )
+                                                  ]
+                             ] .
+
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/YoutubeChannel
+:YoutubeChannel rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/YoutubeVideo
+:YoutubeVideo rdf:type owl:Class ;
+              owl:equivalentClass [ rdf:type owl:Restriction ;
+                                    owl:onProperty :isVideoOf ;
+                                    owl:someValuesFrom :SpotifySong
+                                  ] .
+
+
+#################################################################
+#    Individuals
+#################################################################
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/Album
+:Album rdf:type owl:NamedIndividual ,
+                :AlbumType .
+
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/Single
+:Single rdf:type owl:NamedIndividual ,
+                 :AlbumType .
+
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/songTmp
+:songTmp rdf:type owl:NamedIndividual ,
+                  :SpotifySong ;
+         owl:differentFrom :songTmp1 ;
+         :hasVideo :videoTmp ,
+                   :videoTmp1 ;
+         :acousticness 0.3 ;
+         :danceability 0.2 .
+
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/songTmp1
+:songTmp1 rdf:type owl:NamedIndividual ,
+                   :SpotifySong .
+
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/videoTmp
+:videoTmp rdf:type owl:NamedIndividual ,
+                   :YoutubeVideo ;
+          owl:differentFrom :videoTmp1 .
+
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/videoTmp1
+:videoTmp1 rdf:type owl:NamedIndividual ,
+                    :YoutubeVideo .
+
+
+#################################################################
+#    General axioms
+#################################################################
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( :Album
+                :AlbumType
+                :Person
+                :SpotifySong
+                :YoutubeChannel
+                :YoutubeVideo
+              )
+] .
+
+
+###  Generated by the OWL API (version 4.5.26.2023-07-17T20:34:13Z) https://github.com/owlcs/owlapi
