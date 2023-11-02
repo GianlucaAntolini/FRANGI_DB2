@@ -20,6 +20,11 @@ xsd:date rdf:type rdfs:Datatype .
 #    Object Properties
 #################################################################
 
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44#isPublishedBy
+:isPublishedBy rdf:type owl:ObjectProperty ;
+               owl:inverseOf :published .
+
+
 ###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/belongsTo
 :belongsTo rdf:type owl:ObjectProperty ,
                     owl:FunctionalProperty ;
@@ -34,26 +39,6 @@ xsd:date rdf:type rdfs:Datatype .
          rdfs:range :AlbumType .
 
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/hasVideo
-:hasVideo rdf:type owl:ObjectProperty ;
-          owl:inverseOf :isVideoOf ;
-          rdf:type owl:InverseFunctionalProperty ;
-          rdfs:domain :SpotifySong ;
-          rdfs:range :YoutubeVideo .
-
-
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/isProducedBy
-:isProducedBy rdf:type owl:ObjectProperty ,
-                       owl:FunctionalProperty ;
-              rdfs:domain :Album ;
-              rdfs:range :Artist .
-
-
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/isPublishedBy
-:isPublishedBy rdf:type owl:ObjectProperty ;
-               owl:inverseOf :published .
-
-
 ###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/isUploadedBy
 :isUploadedBy rdf:type owl:ObjectProperty ,
                        owl:FunctionalProperty ;
@@ -62,7 +47,10 @@ xsd:date rdf:type rdfs:Datatype .
 
 
 ###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/isVideoOf
-:isVideoOf rdf:type owl:ObjectProperty .
+:isVideoOf rdf:type owl:ObjectProperty ,
+                    owl:FunctionalProperty ;
+           rdfs:domain :YoutubeVideo ;
+           rdfs:range :SpotifySong .
 
 
 ###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/published
@@ -74,6 +62,20 @@ xsd:date rdf:type rdfs:Datatype .
 #################################################################
 #    Data properties
 #################################################################
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44#albumName
+:albumName rdf:type owl:DatatypeProperty ,
+                    owl:FunctionalProperty ;
+           rdfs:domain :Album ;
+           rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44#channelName
+:channelName rdf:type owl:DatatypeProperty ,
+                      owl:FunctionalProperty ;
+             rdfs:domain :YoutubeChannel ;
+             rdfs:range xsd:string .
+
 
 ###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/acousticness
 :acousticness rdf:type owl:DatatypeProperty ,
@@ -152,11 +154,11 @@ xsd:date rdf:type rdfs:Datatype .
           rdfs:range xsd:decimal .
 
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/ludness
-:ludness rdf:type owl:DatatypeProperty ,
-                  owl:FunctionalProperty ;
-         rdfs:domain :SpotifySong ;
-         rdfs:range xsd:integer .
+###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/loudness
+:loudness rdf:type owl:DatatypeProperty ,
+                   owl:FunctionalProperty ;
+          rdfs:domain :SpotifySong ;
+          rdfs:range xsd:integer .
 
 
 ###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/officialVideo
@@ -167,7 +169,8 @@ xsd:date rdf:type rdfs:Datatype .
 
 
 ###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/personName
-:personName rdf:type owl:DatatypeProperty ;
+:personName rdf:type owl:DatatypeProperty ,
+                     owl:FunctionalProperty ;
             rdfs:domain :Person ;
             rdfs:range xsd:string .
 
@@ -258,12 +261,12 @@ xsd:date rdf:type rdfs:Datatype .
 ###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/SpotifySong
 :SpotifySong rdf:type owl:Class ;
              owl:equivalentClass [ owl:intersectionOf ( [ rdf:type owl:Restriction ;
-                                                          owl:onProperty :belongsTo ;
-                                                          owl:someValuesFrom :Album
-                                                        ]
-                                                        [ rdf:type owl:Restriction ;
                                                           owl:onProperty :isPublishedBy ;
                                                           owl:someValuesFrom :Artist
+                                                        ]
+                                                        [ rdf:type owl:Restriction ;
+                                                          owl:onProperty :belongsTo ;
+                                                          owl:someValuesFrom :Album
                                                         ]
                                                       ) ;
                                    rdf:type owl:Class
@@ -402,9 +405,16 @@ xsd:date rdf:type rdfs:Datatype .
 
 ###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/YoutubeVideo
 :YoutubeVideo rdf:type owl:Class ;
-              owl:equivalentClass [ rdf:type owl:Restriction ;
-                                    owl:onProperty :isVideoOf ;
-                                    owl:someValuesFrom :SpotifySong
+              owl:equivalentClass [ owl:intersectionOf ( [ rdf:type owl:Restriction ;
+                                                           owl:onProperty :isUploadedBy ;
+                                                           owl:someValuesFrom :YoutubeChannel
+                                                         ]
+                                                         [ rdf:type owl:Restriction ;
+                                                           owl:onProperty :isVideoOf ;
+                                                           owl:someValuesFrom :SpotifySong
+                                                         ]
+                                                       ) ;
+                                    rdf:type owl:Class
                                   ] .
 
 
@@ -426,8 +436,6 @@ xsd:date rdf:type rdfs:Datatype .
 :songTmp rdf:type owl:NamedIndividual ,
                   :SpotifySong ;
          owl:differentFrom :songTmp1 ;
-         :hasVideo :videoTmp ,
-                   :videoTmp1 ;
          :acousticness 0.3 ;
          :danceability 0.2 .
 
