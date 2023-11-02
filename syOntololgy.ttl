@@ -1,12 +1,16 @@
-@prefix : <http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/> .
+@prefix : <http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@base <http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/> .
+@base <http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/> .
 
-<http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44> rdf:type owl:Ontology .
+<http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics> rdf:type owl:Ontology ;
+                                                                     rdfs:comment "Statistics for the Top 10 songs of various Spotify artists and their Youtube video." ;
+                                                                     rdfs:isDefinedBy :Andrea_Felline ,
+                                                                                      :Francesco_Frigato ,
+                                                                                      :Gianluca_Antolini .
 
 #################################################################
 #    Datatypes
@@ -20,40 +24,40 @@ xsd:date rdf:type rdfs:Datatype .
 #    Object Properties
 #################################################################
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44#isPublishedBy
-:isPublishedBy rdf:type owl:ObjectProperty ;
-               owl:inverseOf :published .
-
-
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/belongsTo
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/belongsTo
 :belongsTo rdf:type owl:ObjectProperty ,
                     owl:FunctionalProperty ;
            rdfs:domain :SpotifySong ;
            rdfs:range :Album .
 
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/hasType
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/hasType
 :hasType rdf:type owl:ObjectProperty ,
                   owl:FunctionalProperty ;
          rdfs:domain :Album ;
          rdfs:range :AlbumType .
 
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/isUploadedBy
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/isPublishedBy
+:isPublishedBy rdf:type owl:ObjectProperty ;
+               owl:inverseOf :published .
+
+
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/isUploadedBy
 :isUploadedBy rdf:type owl:ObjectProperty ,
                        owl:FunctionalProperty ;
               rdfs:domain :YoutubeVideo ;
               rdfs:range :YoutubeChannel .
 
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/isVideoOf
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/isVideoOf
 :isVideoOf rdf:type owl:ObjectProperty ,
                     owl:FunctionalProperty ;
            rdfs:domain :YoutubeVideo ;
            rdfs:range :SpotifySong .
 
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/published
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/published
 :published rdf:type owl:ObjectProperty ;
            rdfs:domain :Artist ;
            rdfs:range :SpotifySong .
@@ -63,161 +67,161 @@ xsd:date rdf:type rdfs:Datatype .
 #    Data properties
 #################################################################
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44#albumName
-:albumName rdf:type owl:DatatypeProperty ,
-                    owl:FunctionalProperty ;
-           rdfs:domain :Album ;
-           rdfs:range xsd:string .
-
-
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44#channelName
-:channelName rdf:type owl:DatatypeProperty ,
-                      owl:FunctionalProperty ;
-             rdfs:domain :YoutubeChannel ;
-             rdfs:range xsd:string .
-
-
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/acousticness
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/acousticness
 :acousticness rdf:type owl:DatatypeProperty ,
                        owl:FunctionalProperty ;
               rdfs:domain :SpotifySong ;
               rdfs:range xsd:decimal .
 
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/comments
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/albumName
+:albumName rdf:type owl:DatatypeProperty ,
+                    owl:FunctionalProperty ;
+           rdfs:domain :Album ;
+           rdfs:range xsd:string .
+
+
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/channelName
+:channelName rdf:type owl:DatatypeProperty ,
+                      owl:FunctionalProperty ;
+             rdfs:domain :YoutubeChannel ;
+             rdfs:range xsd:string .
+
+
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/comments
 :comments rdf:type owl:DatatypeProperty ,
                    owl:FunctionalProperty ;
           rdfs:domain :YoutubeVideo ;
           rdfs:range xsd:integer .
 
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/danceability
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/danceability
 :danceability rdf:type owl:DatatypeProperty ,
                        owl:FunctionalProperty ;
               rdfs:domain :SpotifySong ;
               rdfs:range xsd:decimal .
 
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/description
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/description
 :description rdf:type owl:DatatypeProperty ,
                       owl:FunctionalProperty ;
              rdfs:domain :YoutubeVideo ;
              rdfs:range xsd:string .
 
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/durationms
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/durationms
 :durationms rdf:type owl:DatatypeProperty ,
                      owl:FunctionalProperty ;
             rdfs:domain :SpotifySong ;
             rdfs:range xsd:integer .
 
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/energy
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/energy
 :energy rdf:type owl:DatatypeProperty ,
                  owl:FunctionalProperty ;
         rdfs:domain :SpotifySong ;
         rdfs:range xsd:decimal .
 
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/instrumentalness
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/instrumentalness
 :instrumentalness rdf:type owl:DatatypeProperty ,
                            owl:FunctionalProperty ;
                   rdfs:domain :SpotifySong ;
                   rdfs:range xsd:decimal .
 
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/key
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/key
 :key rdf:type owl:DatatypeProperty ,
               owl:FunctionalProperty ;
      rdfs:domain :SpotifySong ;
      rdfs:range xsd:integer .
 
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/licensed
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/licensed
 :licensed rdf:type owl:DatatypeProperty ,
                    owl:FunctionalProperty ;
           rdfs:domain :YoutubeVideo ;
           rdfs:range xsd:boolean .
 
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/likes
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/likes
 :likes rdf:type owl:DatatypeProperty ,
                 owl:FunctionalProperty ;
        rdfs:domain :YoutubeVideo ;
        rdfs:range xsd:integer .
 
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/liveness
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/liveness
 :liveness rdf:type owl:DatatypeProperty ,
                    owl:FunctionalProperty ;
           rdfs:domain :SpotifySong ;
           rdfs:range xsd:decimal .
 
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/loudness
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/loudness
 :loudness rdf:type owl:DatatypeProperty ,
                    owl:FunctionalProperty ;
           rdfs:domain :SpotifySong ;
           rdfs:range xsd:integer .
 
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/officialVideo
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/officialVideo
 :officialVideo rdf:type owl:DatatypeProperty ,
                         owl:FunctionalProperty ;
                rdfs:domain :YoutubeVideo ;
                rdfs:range xsd:boolean .
 
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/personName
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/personName
 :personName rdf:type owl:DatatypeProperty ,
                      owl:FunctionalProperty ;
             rdfs:domain :Person ;
             rdfs:range xsd:string .
 
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/speechiness
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/speechiness
 :speechiness rdf:type owl:DatatypeProperty ,
                       owl:FunctionalProperty ;
              rdfs:domain :SpotifySong ;
              rdfs:range xsd:decimal .
 
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/stream
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/stream
 :stream rdf:type owl:DatatypeProperty ,
                  owl:FunctionalProperty ;
         rdfs:domain :SpotifySong ;
         rdfs:range xsd:integer .
 
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/tempobpm
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/tempobpm
 :tempobpm rdf:type owl:DatatypeProperty ,
                    owl:FunctionalProperty ;
           rdfs:domain :SpotifySong ;
           rdfs:range xsd:decimal .
 
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/trackName
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/trackName
 :trackName rdf:type owl:DatatypeProperty ,
                     owl:FunctionalProperty ;
            rdfs:domain :SpotifySong ;
            rdfs:range xsd:string .
 
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/valence
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/valence
 :valence rdf:type owl:DatatypeProperty ,
                   owl:FunctionalProperty ;
          rdfs:domain :SpotifySong ;
          rdfs:range xsd:decimal .
 
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/videoTitle
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/videoTitle
 :videoTitle rdf:type owl:DatatypeProperty ,
                      owl:FunctionalProperty ;
             rdfs:domain :YoutubeVideo ;
             rdfs:range xsd:string .
 
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/views
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/views
 :views rdf:type owl:DatatypeProperty ,
                 owl:FunctionalProperty ;
        rdfs:domain :YoutubeVideo ;
@@ -228,7 +232,7 @@ xsd:date rdf:type rdfs:Datatype .
 #    Classes
 #################################################################
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/Album
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/Album
 :Album rdf:type owl:Class ;
        owl:equivalentClass [ rdf:type owl:Restriction ;
                              owl:onProperty :hasType ;
@@ -236,7 +240,7 @@ xsd:date rdf:type rdfs:Datatype .
                            ] .
 
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/AlbumType
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/AlbumType
 :AlbumType rdf:type owl:Class ;
            owl:equivalentClass [ rdf:type owl:Class ;
                                  owl:oneOf ( :Album
@@ -245,7 +249,7 @@ xsd:date rdf:type rdfs:Datatype .
                                ] .
 
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/Artist
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/Artist
 :Artist rdf:type owl:Class ;
         owl:equivalentClass [ rdf:type owl:Restriction ;
                               owl:onProperty :published ;
@@ -254,19 +258,19 @@ xsd:date rdf:type rdfs:Datatype .
         rdfs:subClassOf :Person .
 
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/Person
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/Person
 :Person rdf:type owl:Class .
 
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/SpotifySong
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/SpotifySong
 :SpotifySong rdf:type owl:Class ;
              owl:equivalentClass [ owl:intersectionOf ( [ rdf:type owl:Restriction ;
-                                                          owl:onProperty :isPublishedBy ;
-                                                          owl:someValuesFrom :Artist
-                                                        ]
-                                                        [ rdf:type owl:Restriction ;
                                                           owl:onProperty :belongsTo ;
                                                           owl:someValuesFrom :Album
+                                                        ]
+                                                        [ rdf:type owl:Restriction ;
+                                                          owl:onProperty :isPublishedBy ;
+                                                          owl:someValuesFrom :Artist
                                                         ]
                                                       ) ;
                                    rdf:type owl:Class
@@ -399,11 +403,11 @@ xsd:date rdf:type rdfs:Datatype .
                              ] .
 
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/YoutubeChannel
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/YoutubeChannel
 :YoutubeChannel rdf:type owl:Class .
 
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/YoutubeVideo
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/YoutubeVideo
 :YoutubeVideo rdf:type owl:Class ;
               owl:equivalentClass [ owl:intersectionOf ( [ rdf:type owl:Restriction ;
                                                            owl:onProperty :isUploadedBy ;
@@ -422,17 +426,32 @@ xsd:date rdf:type rdfs:Datatype .
 #    Individuals
 #################################################################
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/Album
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/Album
 :Album rdf:type owl:NamedIndividual ,
                 :AlbumType .
 
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/Single
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/Andrea_Felline
+:Andrea_Felline rdf:type owl:NamedIndividual ,
+                         :Person .
+
+
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/Francesco_Frigato
+:Francesco_Frigato rdf:type owl:NamedIndividual ,
+                            :Person .
+
+
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/Gianluca_Antolini
+:Gianluca_Antolini rdf:type owl:NamedIndividual ,
+                            :Person .
+
+
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/Single
 :Single rdf:type owl:NamedIndividual ,
                  :AlbumType .
 
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/songTmp
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/songTmp
 :songTmp rdf:type owl:NamedIndividual ,
                   :SpotifySong ;
          owl:differentFrom :songTmp1 ;
@@ -440,18 +459,18 @@ xsd:date rdf:type rdfs:Datatype .
          :danceability 0.2 .
 
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/songTmp1
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/songTmp1
 :songTmp1 rdf:type owl:NamedIndividual ,
                    :SpotifySong .
 
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/videoTmp
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/videoTmp
 :videoTmp rdf:type owl:NamedIndividual ,
                    :YoutubeVideo ;
           owl:differentFrom :videoTmp1 .
 
 
-###  http://www.semanticweb.org/user/ontologies/2023/9/untitled-ontology-44/videoTmp1
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/videoTmp1
 :videoTmp1 rdf:type owl:NamedIndividual ,
                     :YoutubeVideo .
 
@@ -468,6 +487,14 @@ xsd:date rdf:type rdfs:Datatype .
                 :YoutubeChannel
                 :YoutubeVideo
               )
+] .
+
+
+[ rdf:type owl:AllDifferent ;
+  owl:distinctMembers ( :Andrea_Felline
+                        :Francesco_Frigato
+                        :Gianluca_Antolini
+                      )
 ] .
 
 
