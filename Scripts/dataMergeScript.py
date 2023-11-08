@@ -46,13 +46,13 @@ def writeLine(writerCD, rowSY, rowTF):
 
 
 # Open and read the csv files
-with open("Datasets/Original/Spotify_Youtube.csv", "r", newline="") as fileSY:
+with open("../Datasets/Original/Spotify_Youtube.csv", "r", newline="") as fileSY:
     readerSY = csv.DictReader(fileSY)
-    with open("Datasets/Original/spotify_songs.csv", "r", newline="") as fileTF:
+    with open("../Datasets/Original/spotify_songs.csv", "r", newline="") as fileTF:
         readerTF = csv.DictReader(fileTF)
 
         trackIdSY = ""
-        with open("Datasets/Computed/complete_dataset.csv", "w", newline="") as fileCD:
+        with open("../Datasets/Computed/complete_dataset.csv", "w", newline="") as fileCD:
             fieldNamesCD = [
                 # here start all the fields from the spotify_youtube_with_id_sorted.csv
                 "Track",
