@@ -6,7 +6,7 @@ We first designed and created the ontology for the data using Protegè, then we 
 
 The following are the queries that we decided to create:
 ...
-TODO
+ - top 10 song by number of streams
 ...
 
 
@@ -21,3 +21,7 @@ The datasets (in the Datasets/Original folder) have been merged in a single file
 
 
 
+Info:
+
+ - As number of streams we took the maximum value when there were multiple values for the same video
+ - We still have to choose if we will take the union or the intersection of the datasets (probably union)
