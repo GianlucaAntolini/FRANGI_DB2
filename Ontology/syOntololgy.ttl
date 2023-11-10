@@ -7,6 +7,7 @@
 @base <http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/> .
 
 <http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics> rdf:type owl:Ontology ;
+                                                                     owl:imports <http://www.w3.org/2004/02/skos/core> ;
                                                                      rdfs:comment "Statistics for the Top 10 songs of various Spotify artists and their Youtube video." ;
                                                                      rdfs:isDefinedBy :Andrea_Felline ,
                                                                                       :Francesco_Frigato ,
@@ -28,39 +29,60 @@ xsd:date rdf:type rdfs:Datatype .
 :belongsTo rdf:type owl:ObjectProperty ,
                     owl:FunctionalProperty ;
            rdfs:domain :SpotifySong ;
-           rdfs:range :Album .
+           rdfs:range :Album ;
+           rdfs:comment "A Spotify Song that belongs to a Spotify Album." .
+
+
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/hasGenre
+:hasGenre rdf:type owl:ObjectProperty ,
+                   owl:FunctionalProperty ;
+          rdfs:domain :SpotifyPlaylist ;
+          rdfs:range :Genre ;
+          rdfs:comment "A Spotify Playlist has a Genre." .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/hasType
 :hasType rdf:type owl:ObjectProperty ,
                   owl:FunctionalProperty ;
          rdfs:domain :Album ;
-         rdfs:range :AlbumType .
+         rdfs:range :AlbumType ;
+         rdfs:comment "A Spotify Album that has a Type (Album, Single or Compilation)." .
+
+
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/isPartOf
+:isPartOf rdf:type owl:ObjectProperty ;
+          rdfs:domain :SpotifySong ;
+          rdfs:range :SpotifyPlaylist ;
+          rdfs:comment "A Spotify Song is part of a Spotify Playlist." .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/isPublishedBy
 :isPublishedBy rdf:type owl:ObjectProperty ;
-               owl:inverseOf :published .
+               owl:inverseOf :published ;
+               rdfs:comment "A Spotify Song published by an Artists." .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/isUploadedBy
 :isUploadedBy rdf:type owl:ObjectProperty ,
                        owl:FunctionalProperty ;
               rdfs:domain :YoutubeVideo ;
-              rdfs:range :YoutubeChannel .
+              rdfs:range :YoutubeChannel ;
+              rdfs:comment "A Youtube Video uploaded by a Channel." .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/isVideoOf
 :isVideoOf rdf:type owl:ObjectProperty ,
                     owl:FunctionalProperty ;
            rdfs:domain :YoutubeVideo ;
-           rdfs:range :SpotifySong .
+           rdfs:range :SpotifySong ;
+           rdfs:comment "A Youtube Video related to a Spotify Song." .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/published
 :published rdf:type owl:ObjectProperty ;
            rdfs:domain :Artist ;
-           rdfs:range :SpotifySong .
+           rdfs:range :SpotifySong ;
+           rdfs:comment "An Artist publish a Spotify Song." .
 
 
 #################################################################
@@ -71,161 +93,208 @@ xsd:date rdf:type rdfs:Datatype .
 :acousticness rdf:type owl:DatatypeProperty ,
                        owl:FunctionalProperty ;
               rdfs:domain :SpotifySong ;
-              rdfs:range xsd:decimal .
+              rdfs:range xsd:float ;
+              rdfs:comment "A confidence measure from 0.0 to 1.0 of whether the track is acoustic. 1.0 represents high confidence the track is acoustic." .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/albumName
 :albumName rdf:type owl:DatatypeProperty ,
                     owl:FunctionalProperty ;
            rdfs:domain :Album ;
-           rdfs:range xsd:string .
+           rdfs:range xsd:string ;
+           rdfs:comment "The name of the Album on Spotify." .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/channelName
 :channelName rdf:type owl:DatatypeProperty ,
                       owl:FunctionalProperty ;
              rdfs:domain :YoutubeChannel ;
-             rdfs:range xsd:string .
+             rdfs:range xsd:string ;
+             rdfs:comment "The name of the Youtube Channel." .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/comments
 :comments rdf:type owl:DatatypeProperty ,
                    owl:FunctionalProperty ;
           rdfs:domain :YoutubeVideo ;
-          rdfs:range xsd:integer .
+          rdfs:range xsd:integer ;
+          rdfs:comment "The number of comments of the Youtube Video." .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/danceability
 :danceability rdf:type owl:DatatypeProperty ,
                        owl:FunctionalProperty ;
               rdfs:domain :SpotifySong ;
-              rdfs:range xsd:decimal .
+              rdfs:range xsd:float ;
+              rdfs:comment "Describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable." .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/description
 :description rdf:type owl:DatatypeProperty ,
                       owl:FunctionalProperty ;
              rdfs:domain :YoutubeVideo ;
-             rdfs:range xsd:string .
+             rdfs:range xsd:string ;
+             rdfs:comment "The description of the Youtube Video." .
 
 
-###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/durationms
-:durationms rdf:type owl:DatatypeProperty ,
-                     owl:FunctionalProperty ;
-            rdfs:domain :SpotifySong ;
-            rdfs:range xsd:integer .
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/duration
+:duration rdf:type owl:DatatypeProperty ,
+                   owl:FunctionalProperty ;
+          rdfs:domain :SpotifySong ;
+          rdfs:range xsd:integer ;
+          rdfs:comment "The duration of the track in milliseconds (ms)." .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/energy
 :energy rdf:type owl:DatatypeProperty ,
                  owl:FunctionalProperty ;
         rdfs:domain :SpotifySong ;
-        rdfs:range xsd:decimal .
+        rdfs:range xsd:float ;
+        rdfs:comment "Is a measure from 0.0 to 1.0 and represents a perceptual measure of intensity and activity." .
+
+
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/genreName
+:genreName rdf:type owl:DatatypeProperty ,
+                    owl:FunctionalProperty ;
+           rdfs:domain :Genre ;
+           rdfs:range xsd:string ;
+           rdfs:comment "The name of the Genre." .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/instrumentalness
 :instrumentalness rdf:type owl:DatatypeProperty ,
                            owl:FunctionalProperty ;
                   rdfs:domain :SpotifySong ;
-                  rdfs:range xsd:decimal .
+                  rdfs:range xsd:float ;
+                  rdfs:comment "Predicts whether a track contains no vocals. The closer the instrumentalness value is to 1.0, the greater likelihood the track contains no vocal content." .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/key
 :key rdf:type owl:DatatypeProperty ,
               owl:FunctionalProperty ;
      rdfs:domain :SpotifySong ;
-     rdfs:range xsd:integer .
+     rdfs:range xsd:integer ;
+     rdfs:comment "The key the track is in." .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/licensed
 :licensed rdf:type owl:DatatypeProperty ,
                    owl:FunctionalProperty ;
           rdfs:domain :YoutubeVideo ;
-          rdfs:range xsd:boolean .
+          rdfs:range xsd:boolean ;
+          rdfs:comment "Indicates whether the video represents licensed content, which means that the content was uploaded to a channel linked to a YouTube content partner and then claimed by that partner." .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/likes
 :likes rdf:type owl:DatatypeProperty ,
                 owl:FunctionalProperty ;
        rdfs:domain :YoutubeVideo ;
-       rdfs:range xsd:integer .
+       rdfs:range xsd:integer ;
+       rdfs:comment "The number of likes of the Youtube Video." .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/liveness
 :liveness rdf:type owl:DatatypeProperty ,
                    owl:FunctionalProperty ;
           rdfs:domain :SpotifySong ;
-          rdfs:range xsd:decimal .
+          rdfs:range xsd:float ;
+          rdfs:comment "Detects the presence of an audience in the recording. Higher liveness values represent an increased probability that the track was performed live." .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/loudness
 :loudness rdf:type owl:DatatypeProperty ,
                    owl:FunctionalProperty ;
           rdfs:domain :SpotifySong ;
-          rdfs:range xsd:integer .
+          rdfs:range xsd:float ;
+          rdfs:comment "The overall loudness of a track in decibels (dB). Values typically range between -60 and 0 db." .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/officialVideo
 :officialVideo rdf:type owl:DatatypeProperty ,
                         owl:FunctionalProperty ;
                rdfs:domain :YoutubeVideo ;
-               rdfs:range xsd:boolean .
+               rdfs:range xsd:boolean ;
+               rdfs:comment "Boolean value that indicates if the video found is the official video of the song." .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/personName
 :personName rdf:type owl:DatatypeProperty ,
                      owl:FunctionalProperty ;
             rdfs:domain :Person ;
-            rdfs:range xsd:string .
+            rdfs:range xsd:string ;
+            rdfs:comment "The name of a Person." .
+
+
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/playlistName
+:playlistName rdf:type owl:DatatypeProperty ,
+                       owl:FunctionalProperty ;
+              rdfs:domain :SpotifyPlaylist ;
+              rdfs:range xsd:string ;
+              rdfs:comment "The name of the Playlist." .
+
+
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/releaseDate
+:releaseDate rdf:type owl:DatatypeProperty ,
+                      owl:FunctionalProperty ;
+             rdfs:domain :Album ;
+             rdfs:range xsd:date ;
+             rdfs:comment "The release date of the Album." .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/speechiness
 :speechiness rdf:type owl:DatatypeProperty ,
                       owl:FunctionalProperty ;
              rdfs:domain :SpotifySong ;
-             rdfs:range xsd:decimal .
+             rdfs:range xsd:float ;
+             rdfs:comment "Detects the presence of spoken words in a track. The more exclusively speech-like the recording (e.g. talk show, audio book, poetry), the closer to 1.0 the attribute value." .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/stream
 :stream rdf:type owl:DatatypeProperty ,
                  owl:FunctionalProperty ;
         rdfs:domain :SpotifySong ;
-        rdfs:range xsd:integer .
+        rdfs:range xsd:integer ;
+        rdfs:comment "The number of streams of the Song on Spotify." .
 
 
-###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/tempobpm
-:tempobpm rdf:type owl:DatatypeProperty ,
-                   owl:FunctionalProperty ;
-          rdfs:domain :SpotifySong ;
-          rdfs:range xsd:decimal .
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/tempo
+:tempo rdf:type owl:DatatypeProperty ,
+                owl:FunctionalProperty ;
+       rdfs:domain :SpotifySong ;
+       rdfs:range xsd:float ;
+       rdfs:comment "The overall estimated tempo of a track in beats per minute (BPM)." .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/trackName
 :trackName rdf:type owl:DatatypeProperty ,
                     owl:FunctionalProperty ;
            rdfs:domain :SpotifySong ;
-           rdfs:range xsd:string .
+           rdfs:range xsd:string ;
+           rdfs:comment "The name of the song, as visible on the Spotify platform." .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/valence
 :valence rdf:type owl:DatatypeProperty ,
                   owl:FunctionalProperty ;
          rdfs:domain :SpotifySong ;
-         rdfs:range xsd:decimal .
+         rdfs:range xsd:float ;
+         rdfs:comment "A measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track." .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/videoTitle
 :videoTitle rdf:type owl:DatatypeProperty ,
                      owl:FunctionalProperty ;
             rdfs:domain :YoutubeVideo ;
-            rdfs:range xsd:string .
+            rdfs:range xsd:string ;
+            rdfs:comment "The title of the video on Youtube." .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/views
 :views rdf:type owl:DatatypeProperty ,
                 owl:FunctionalProperty ;
        rdfs:domain :YoutubeVideo ;
-       rdfs:range xsd:integer .
+       rdfs:range xsd:integer ;
+       rdfs:comment "The number of views of the Youtube Video." .
 
 
 #################################################################
@@ -237,16 +306,19 @@ xsd:date rdf:type rdfs:Datatype .
        owl:equivalentClass [ rdf:type owl:Restriction ;
                              owl:onProperty :hasType ;
                              owl:someValuesFrom :AlbumType
-                           ] .
+                           ] ;
+       rdfs:comment "Class of the Spotify Album" .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/AlbumType
 :AlbumType rdf:type owl:Class ;
            owl:equivalentClass [ rdf:type owl:Class ;
-                                 owl:oneOf ( :Album
-                                             :Single
+                                 owl:oneOf ( :album
+                                             :compilation
+                                             :single
                                            )
-                               ] .
+                               ] ;
+           rdfs:comment "Class that represents the type of a Spotify Album (Album, Single or Compilation)." .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/Artist
@@ -255,11 +327,26 @@ xsd:date rdf:type rdfs:Datatype .
                               owl:onProperty :published ;
                               owl:someValuesFrom :SpotifySong
                             ] ;
-        rdfs:subClassOf :Person .
+        rdfs:subClassOf :Person ;
+        rdfs:comment "Class of Artists that have published a song on Spotify." .
+
+
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/Genre
+:Genre rdf:type owl:Class ;
+       rdfs:comment "Class of Genres of the Playlists." .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/Person
 :Person rdf:type owl:Class .
+
+
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/SpotifyPlaylist
+:SpotifyPlaylist rdf:type owl:Class ;
+                 rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                   owl:onProperty :hasGenre ;
+                                   owl:someValuesFrom :Genre
+                                 ] ;
+                 rdfs:comment "Class of  the Playlists of Spotify Songs." .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/SpotifySong
@@ -279,14 +366,14 @@ xsd:date rdf:type rdfs:Datatype .
                                owl:onProperty :acousticness ;
                                owl:someValuesFrom [ rdf:type rdfs:Datatype ;
                                                     owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
-                                                                           owl:onDatatype xsd:decimal ;
-                                                                           owl:withRestrictions ( [ xsd:minInclusive 0.0
+                                                                           owl:onDatatype xsd:float ;
+                                                                           owl:withRestrictions ( [ xsd:minInclusive "0.0"^^xsd:float
                                                                                                   ]
                                                                                                 )
                                                                          ]
                                                                          [ rdf:type rdfs:Datatype ;
-                                                                           owl:onDatatype xsd:decimal ;
-                                                                           owl:withRestrictions ( [ xsd:maxInclusive 1.0
+                                                                           owl:onDatatype xsd:float ;
+                                                                           owl:withRestrictions ( [ xsd:maxInclusive "1.0"^^xsd:float
                                                                                                   ]
                                                                                                 )
                                                                          ]
@@ -297,14 +384,14 @@ xsd:date rdf:type rdfs:Datatype .
                                owl:onProperty :danceability ;
                                owl:someValuesFrom [ rdf:type rdfs:Datatype ;
                                                     owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
-                                                                           owl:onDatatype xsd:decimal ;
-                                                                           owl:withRestrictions ( [ xsd:minInclusive 0.0
+                                                                           owl:onDatatype xsd:float ;
+                                                                           owl:withRestrictions ( [ xsd:minInclusive "0.0"^^xsd:float
                                                                                                   ]
                                                                                                 )
                                                                          ]
                                                                          [ rdf:type rdfs:Datatype ;
-                                                                           owl:onDatatype xsd:decimal ;
-                                                                           owl:withRestrictions ( [ xsd:maxInclusive 1.0
+                                                                           owl:onDatatype xsd:float ;
+                                                                           owl:withRestrictions ( [ xsd:maxInclusive "1.0"^^xsd:float
                                                                                                   ]
                                                                                                 )
                                                                          ]
@@ -315,14 +402,14 @@ xsd:date rdf:type rdfs:Datatype .
                                owl:onProperty :energy ;
                                owl:someValuesFrom [ rdf:type rdfs:Datatype ;
                                                     owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
-                                                                           owl:onDatatype xsd:decimal ;
-                                                                           owl:withRestrictions ( [ xsd:minInclusive 0.0
+                                                                           owl:onDatatype xsd:float ;
+                                                                           owl:withRestrictions ( [ xsd:minInclusive "0.0"^^xsd:float
                                                                                                   ]
                                                                                                 )
                                                                          ]
                                                                          [ rdf:type rdfs:Datatype ;
-                                                                           owl:onDatatype xsd:decimal ;
-                                                                           owl:withRestrictions ( [ xsd:maxInclusive 1.0
+                                                                           owl:onDatatype xsd:float ;
+                                                                           owl:withRestrictions ( [ xsd:maxInclusive "1.0"^^xsd:float
                                                                                                   ]
                                                                                                 )
                                                                          ]
@@ -333,14 +420,14 @@ xsd:date rdf:type rdfs:Datatype .
                                owl:onProperty :instrumentalness ;
                                owl:someValuesFrom [ rdf:type rdfs:Datatype ;
                                                     owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
-                                                                           owl:onDatatype xsd:decimal ;
-                                                                           owl:withRestrictions ( [ xsd:minInclusive 0.0
+                                                                           owl:onDatatype xsd:float ;
+                                                                           owl:withRestrictions ( [ xsd:minInclusive "0.0"^^xsd:float
                                                                                                   ]
                                                                                                 )
                                                                          ]
                                                                          [ rdf:type rdfs:Datatype ;
-                                                                           owl:onDatatype xsd:decimal ;
-                                                                           owl:withRestrictions ( [ xsd:maxInclusive 1.0
+                                                                           owl:onDatatype xsd:float ;
+                                                                           owl:withRestrictions ( [ xsd:maxInclusive "1.0"^^xsd:float
                                                                                                   ]
                                                                                                 )
                                                                          ]
@@ -351,14 +438,14 @@ xsd:date rdf:type rdfs:Datatype .
                                owl:onProperty :liveness ;
                                owl:someValuesFrom [ rdf:type rdfs:Datatype ;
                                                     owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
-                                                                           owl:onDatatype xsd:decimal ;
-                                                                           owl:withRestrictions ( [ xsd:minInclusive 0.0
+                                                                           owl:onDatatype xsd:float ;
+                                                                           owl:withRestrictions ( [ xsd:minInclusive "0.0"^^xsd:float
                                                                                                   ]
                                                                                                 )
                                                                          ]
                                                                          [ rdf:type rdfs:Datatype ;
-                                                                           owl:onDatatype xsd:decimal ;
-                                                                           owl:withRestrictions ( [ xsd:maxInclusive 1.0
+                                                                           owl:onDatatype xsd:float ;
+                                                                           owl:withRestrictions ( [ xsd:maxInclusive "1.0"^^xsd:float
                                                                                                   ]
                                                                                                 )
                                                                          ]
@@ -369,14 +456,14 @@ xsd:date rdf:type rdfs:Datatype .
                                owl:onProperty :speechiness ;
                                owl:someValuesFrom [ rdf:type rdfs:Datatype ;
                                                     owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
-                                                                           owl:onDatatype xsd:decimal ;
-                                                                           owl:withRestrictions ( [ xsd:minInclusive 0.0
+                                                                           owl:onDatatype xsd:float ;
+                                                                           owl:withRestrictions ( [ xsd:minInclusive "0.0"^^xsd:float
                                                                                                   ]
                                                                                                 )
                                                                          ]
                                                                          [ rdf:type rdfs:Datatype ;
-                                                                           owl:onDatatype xsd:decimal ;
-                                                                           owl:withRestrictions ( [ xsd:maxInclusive 1.0
+                                                                           owl:onDatatype xsd:float ;
+                                                                           owl:withRestrictions ( [ xsd:maxInclusive "1.0"^^xsd:float
                                                                                                   ]
                                                                                                 )
                                                                          ]
@@ -387,24 +474,26 @@ xsd:date rdf:type rdfs:Datatype .
                                owl:onProperty :valence ;
                                owl:someValuesFrom [ rdf:type rdfs:Datatype ;
                                                     owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
-                                                                           owl:onDatatype xsd:decimal ;
-                                                                           owl:withRestrictions ( [ xsd:minInclusive 0.0
+                                                                           owl:onDatatype xsd:float ;
+                                                                           owl:withRestrictions ( [ xsd:minInclusive "0.0"^^xsd:float
                                                                                                   ]
                                                                                                 )
                                                                          ]
                                                                          [ rdf:type rdfs:Datatype ;
-                                                                           owl:onDatatype xsd:decimal ;
-                                                                           owl:withRestrictions ( [ xsd:maxInclusive 1.0
+                                                                           owl:onDatatype xsd:float ;
+                                                                           owl:withRestrictions ( [ xsd:maxInclusive "1.0"^^xsd:float
                                                                                                   ]
                                                                                                 )
                                                                          ]
                                                                        )
                                                   ]
-                             ] .
+                             ] ;
+             rdfs:comment "Class of the songs published on Spotify." .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/YoutubeChannel
-:YoutubeChannel rdf:type owl:Class .
+:YoutubeChannel rdf:type owl:Class ;
+                rdfs:comment "Class of the Youtube Channel that have uploaded a official (or unofficial) video of a Spotify Song." .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/YoutubeVideo
@@ -419,17 +508,13 @@ xsd:date rdf:type rdfs:Datatype .
                                                          ]
                                                        ) ;
                                     rdf:type owl:Class
-                                  ] .
+                                  ] ;
+              rdfs:comment "Class of the Youtube Videos related to a Spotify Song." .
 
 
 #################################################################
 #    Individuals
 #################################################################
-
-###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/Album
-:Album rdf:type owl:NamedIndividual ,
-                :AlbumType .
-
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/Andrea_Felline
 :Andrea_Felline rdf:type owl:NamedIndividual ,
@@ -446,33 +531,20 @@ xsd:date rdf:type rdfs:Datatype .
                             :Person .
 
 
-###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/Single
-:Single rdf:type owl:NamedIndividual ,
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/album
+:album rdf:type owl:NamedIndividual ,
+                :AlbumType ;
+       rdfs:comment "Class of Spotify Albums that contain Spotify Songs." .
+
+
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/compilation
+:compilation rdf:type owl:NamedIndividual ,
+                      :AlbumType .
+
+
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/single
+:single rdf:type owl:NamedIndividual ,
                  :AlbumType .
-
-
-###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/songTmp
-:songTmp rdf:type owl:NamedIndividual ,
-                  :SpotifySong ;
-         owl:differentFrom :songTmp1 ;
-         :acousticness 0.3 ;
-         :danceability 0.2 .
-
-
-###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/songTmp1
-:songTmp1 rdf:type owl:NamedIndividual ,
-                   :SpotifySong .
-
-
-###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/videoTmp
-:videoTmp rdf:type owl:NamedIndividual ,
-                   :YoutubeVideo ;
-          owl:differentFrom :videoTmp1 .
-
-
-###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/videoTmp1
-:videoTmp1 rdf:type owl:NamedIndividual ,
-                    :YoutubeVideo .
 
 
 #################################################################
@@ -482,7 +554,9 @@ xsd:date rdf:type rdfs:Datatype .
 [ rdf:type owl:AllDisjointClasses ;
   owl:members ( :Album
                 :AlbumType
+                :Genre
                 :Person
+                :SpotifyPlaylist
                 :SpotifySong
                 :YoutubeChannel
                 :YoutubeVideo
