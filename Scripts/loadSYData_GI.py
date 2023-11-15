@@ -6,7 +6,6 @@ from rdflib.namespace import FOAF, XSD, SKOS
 
 # path to csv and path of saving folder
 path = str(Path(os.path.abspath(os.getcwd())).parent.absolute())
-print(path)
 syUrls = path + "/Datasets/Computed/complete_dataset.csv"
 savePath = path + "/Datasets/rdf/"
 
@@ -28,27 +27,26 @@ names = [
     "Description",
     "Licensed",
     "official_video",
+    "channelId",
 ]
 
 
 csvData = pd.read_csv(syUrls, sep=",", usecols=names)
 csvData.info()
 
+addedChannels = []
+
 # iterate over the csv data
 for index, row in csvData.iterrows():
     # Create the node to add to the Graph
     # the node has the namespace + the id as URI
     video = URIRef(SY[row["Url_youtube"]])
-    # remove unwanted characters from channel name
-    channel = URIRef(
-        SY[
-            str(row["Channel"])
-            .replace(" ", "_")
-            .replace("|", "_")
-            .replace('"', "_")
-            .replace("{", "_")
-            .replace("}", "_")
-        ]
+    channel = (
+        URIRef(SY[str(row["channelId"])])
+        if str(row["channelId"]) != ""
+        and str(row["channelId"]) != "nan"
+        and str(row["channelId"]) is not None
+        else None
     )
     song = URIRef(SY[row["Uri"]])
 
@@ -106,19 +104,23 @@ for index, row in csvData.iterrows():
 
     if (channel, RDF.type, SY.Channel) not in g:
         g.add((channel, RDF.type, SY.Channel))
-        g.add(
-            (
-                channel,
-                SY["channelName"],
-                Literal(row["Channel"], datatype=XSD.string),
+        # if the channel isn't already in the addedChannels list add it
+        if channel is not None and channel not in addedChannels:
+            addedChannels.append(channel)
+
+            g.add(
+                (
+                    channel,
+                    SY["channelName"],
+                    Literal(row["Channel"], datatype=XSD.string),
+                )
             )
-        )
 
     # add edges triples (links between nodes)
     if (song, RDF.type, SY.SpotifySong) in g:
         g.add((video, SY["isVideoOf"], song))
-
-    g.add((video, SY["isUploadedBy"], channel))
+    if channel is not None:
+        g.add((video, SY["isUploadedBy"], channel))
 
 
 # Bind the namespaces to a prefix for more readable output
