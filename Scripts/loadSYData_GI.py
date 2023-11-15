@@ -28,10 +28,6 @@ names = [
     "Description",
     "Licensed",
     "official_video",
-    "track_album_release_date",
-    "track_album_id",
-    "Album",
-    "Album_type",
 ]
 
 
@@ -42,7 +38,6 @@ csvData.info()
 for index, row in csvData.iterrows():
     # Create the node to add to the Graph
     # the node has the namespace + the id as URI
-    album = URIRef(SY[row["track_album_id"]])
     video = URIRef(SY[row["Url_youtube"]])
     # remove unwanted characters from channel name
     channel = URIRef(
@@ -56,24 +51,6 @@ for index, row in csvData.iterrows():
         ]
     )
     song = URIRef(SY[row["Uri"]])
-
-    # Add nodes triples
-    if (album, RDF.type, SY.Album) not in g:
-        g.add((album, RDF.type, SY.Album))
-        g.add(
-            (
-                album,
-                SY["albumName"],
-                Literal(row["Album"], datatype=XSD.string),
-            )
-        )
-        g.add(
-            (
-                album,
-                SY["releaseDate"],
-                Literal(row["track_album_release_date"], datatype=XSD.date),
-            )
-        )
 
     if (video, RDF.type, SY.Video) not in g:
         g.add((video, RDF.type, SY.YoutubeVideo))
@@ -140,7 +117,6 @@ for index, row in csvData.iterrows():
     # add edges triples (links between nodes)
     if (song, RDF.type, SY.SpotifySong) in g:
         g.add((video, SY["isVideoOf"], song))
-        g.add((song, SY["belongsTo"], album))
 
     g.add((video, SY["isUploadedBy"], channel))
 
