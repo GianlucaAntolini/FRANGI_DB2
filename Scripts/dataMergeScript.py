@@ -44,7 +44,7 @@ def writeLine(writerCD, rowSY, rowTF):
             "Description": rowSY["Description"],
             "Licensed": rowSY["Licensed"],
             "official_video": rowSY["official_video"],
-            # we check if the part of the other file is not None but it shouldn't be because we do a full join
+            # other file part
             "track_album_release_date": rowTF["track_album_release_date"]
             if rowTF is not None
             else "",
@@ -118,12 +118,10 @@ with open("../Datasets/Original/Spotify_Youtube.csv", "r", newline="") as fileSY
             TFDict = {}
             for rowTF in readerTF:
                 TFDict[rowTF["track_id"]] = rowTF
-            count = 0
             for rowSY in readerSY:
                 trackIdSY = rowSY["Uri"].split(":")[2]
                 # for each row of the tracks_features.csv
                 if trackIdSY in TFDict:
-                    count += 1
-                    print("Found: " + trackIdSY)
-                    print(TFDict[trackIdSY])
                     writeLine(writerCD, rowSY, TFDict[trackIdSY])
+                else:
+                    writeLine(writerCD, rowSY, None)
