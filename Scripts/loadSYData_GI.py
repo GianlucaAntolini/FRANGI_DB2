@@ -40,6 +40,11 @@ addedChannels = []
 for index, row in csvData.iterrows():
     # Create the node to add to the Graph
     # the node has the namespace + the id as URI
+    if pd.isnull(row["Url_youtube"]):
+        print("null row: " + str(row["Url_youtube"]))
+        continue
+    print("NOT NULL row : " + str(row["Url_youtube"]))
+    print("likes: " + str(row["Likes"]))
     video = URIRef(SY[row["Url_youtube"]])
     channel = (
         URIRef(SY[str(row["channelId"])])
@@ -59,27 +64,30 @@ for index, row in csvData.iterrows():
                 Literal(row["Title"], datatype=XSD.string),
             )
         )
-        g.add(
-            (
-                video,
-                SY["views"],
-                Literal(row["Views"], datatype=XSD.integer),
+        if not pd.isnull(row["Views"]):
+            g.add(
+                (
+                    video,
+                    SY["views"],
+                    Literal(int(row["Views"]), datatype=XSD.integer),
+                )
             )
-        )
-        g.add(
-            (
-                video,
-                SY["likes"],
-                Literal(row["Likes"], datatype=XSD.integer),
+        if not pd.isnull(row["Likes"]):
+            g.add(
+                (
+                    video,
+                    SY["likes"],
+                    Literal(int(row["Likes"]), datatype=XSD.integer),
+                )
             )
-        )
-        g.add(
-            (
-                video,
-                SY["comments"],
-                Literal(row["Comments"], datatype=XSD.integer),
+        if not pd.isnull(row["Comments"]):
+            g.add(
+                (
+                    video,
+                    SY["comments"],
+                    Literal(int(row["Comments"]), datatype=XSD.integer),
+                )
             )
-        )
         g.add(
             (
                 video,
@@ -102,8 +110,8 @@ for index, row in csvData.iterrows():
             )
         )
 
-    if (channel, RDF.type, SY.Channel) not in g:
-        g.add((channel, RDF.type, SY.Channel))
+    if (channel, RDF.type, SY.YoutubeChannel) not in g:
+        g.add((channel, RDF.type, SY.YoutubeChannel))
         # if the channel isn't already in the addedChannels list add it
         if channel is not None and channel not in addedChannels:
             addedChannels.append(channel)
@@ -117,8 +125,7 @@ for index, row in csvData.iterrows():
             )
 
     # add edges triples (links between nodes)
-    if (song, RDF.type, SY.SpotifySong) in g:
-        g.add((video, SY["isVideoOf"], song))
+    g.add((video, SY["isVideoOf"], song))
     if channel is not None:
         g.add((video, SY["isUploadedBy"], channel))
 
@@ -129,7 +136,5 @@ g.bind("sy", SY)
 
 # print all the data in the Turtle format
 print("--- saving serialization ---")
-with open(
-    savePath + "Videos_Channels_Albums_AlbumTypes.ttl", "w+", encoding="utf-8"
-) as file:
+with open(savePath + "Videos_Channels.ttl", "w+", encoding="utf-8") as file:
     file.write(g.serialize(format="turtle"))
