@@ -35,8 +35,7 @@ xsd:date rdf:type rdfs:Datatype .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/hasGenre
-:hasGenre rdf:type owl:ObjectProperty ,
-                   owl:FunctionalProperty ;
+:hasGenre rdf:type owl:ObjectProperty ;
           rdfs:domain :SpotifyPlaylist ;
           rdfs:range :Genre ;
           rdfs:comment "A Spotify Playlist has a Genre." .
