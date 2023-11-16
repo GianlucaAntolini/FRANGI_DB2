@@ -235,7 +235,6 @@ names = [
 csvData = pd.read_csv(syUrls, sep=",", usecols=names)
 csvData.info()
 
-addedChannels = []
 
 # iterate over the csv data
 for index, row in csvData.iterrows():
@@ -244,7 +243,7 @@ for index, row in csvData.iterrows():
     if pd.isnull(row["Url_youtube"]):
         continue
 
-    video = URIRef(SY[row["Url_youtube"]])
+    video = URIRef(SY[row["Url_youtube"].split("=")[-1]])
     channel = (
         URIRef(SY[str(row["channelId"])])
         if str(row["channelId"]) != ""
@@ -309,19 +308,18 @@ for index, row in csvData.iterrows():
             )
         )
 
-    if (channel, RDF.type, SY.YoutubeChannel) not in g:
-        g.add((channel, RDF.type, SY.YoutubeChannel))
-        # if the channel isn't already in the addedChannels list add it
-        if channel is not None and channel not in addedChannels:
-            addedChannels.append(channel)
+    # if the channel isn't already in the addedChannels list add it
+    if channel is not None:
+        if (channel, RDF.type, SY.YoutubeChannel) not in g:
+            g.add((channel, RDF.type, SY.YoutubeChannel))
 
-            g.add(
-                (
-                    channel,
-                    SY["channelName"],
-                    Literal(row["Channel"], datatype=XSD.string),
-                )
+        g.add(
+            (
+                channel,
+                SY["channelName"],
+                Literal(row["Channel"], datatype=XSD.string),
             )
+        )
 
     # add edges triples (links between nodes)
     g.add((video, SY["isVideoOf"], song))
