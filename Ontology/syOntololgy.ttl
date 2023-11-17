@@ -7,8 +7,7 @@
 @base <http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/> .
 
 <http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics> rdf:type owl:Ontology ;
-                                                                     owl:imports <file:/Users/gianlucaantolini/Desktop/UNI/DB2/Project/Repo/FRANGI_DB2/Datasets/rdf/syOn.ttl> ,
-                                                                                 <http://www.w3.org/2004/02/skos/core> ;
+                                                                     owl:imports <http://www.w3.org/2004/02/skos/core> ;
                                                                      rdfs:comment "Statistics for the Top 10 songs of various Spotify artists and their Youtube video." ;
                                                                      rdfs:isDefinedBy :Andrea_Felline ,
                                                                                       :Francesco_Frigato ,

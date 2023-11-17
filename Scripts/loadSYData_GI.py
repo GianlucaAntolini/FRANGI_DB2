@@ -34,18 +34,16 @@ names = [
 csvData = pd.read_csv(syUrls, sep=",", usecols=names)
 csvData.info()
 
-addedChannels = []
+addedVideos = []
 
 # iterate over the csv data
 for index, row in csvData.iterrows():
     # Create the node to add to the Graph
     # the node has the namespace + the id as URI
     if pd.isnull(row["Url_youtube"]):
-        print("null row: " + str(row["Url_youtube"]))
         continue
-    print("NOT NULL row : " + str(row["Url_youtube"]))
-    print("likes: " + str(row["Likes"]))
-    video = URIRef(SY[row["Url_youtube"]])
+
+    video = URIRef(SY[row["Url_youtube"].split("=")[-1]])
     channel = (
         URIRef(SY[str(row["channelId"])])
         if str(row["channelId"]) != ""
@@ -55,7 +53,11 @@ for index, row in csvData.iterrows():
     )
     song = URIRef(SY[row["Uri"]])
 
-    if (video, RDF.type, SY.Video) not in g:
+    if row["Url_youtube"].split("=")[-1] in addedVideos:
+        continue
+    else:
+        addedVideos.append(row["Url_youtube"].split("=")[-1])
+
         g.add((video, RDF.type, SY.YoutubeVideo))
         g.add(
             (
@@ -110,25 +112,28 @@ for index, row in csvData.iterrows():
             )
         )
 
-    if (channel, RDF.type, SY.YoutubeChannel) not in g:
-        g.add((channel, RDF.type, SY.YoutubeChannel))
-        # if the channel isn't already in the addedChannels list add it
-        if channel is not None and channel not in addedChannels:
-            addedChannels.append(channel)
+    # if the channel isn't already in the addedChannels list add it
+    if channel is not None:
+        if (channel, RDF.type, SY.YoutubeChannel) not in g:
+            g.add((channel, RDF.type, SY.YoutubeChannel))
 
-            g.add(
-                (
-                    channel,
-                    SY["channelName"],
-                    Literal(row["Channel"], datatype=XSD.string),
-                )
+        g.add(
+            (
+                channel,
+                SY["channelName"],
+                Literal(row["Channel"], datatype=XSD.string),
             )
+        )
 
     # add edges triples (links between nodes)
     g.add((video, SY["isVideoOf"], song))
     if channel is not None:
         g.add((video, SY["isUploadedBy"], channel))
 
+
+# Bind the namespaces to a prefix for more readable output
+g.bind("xsd", XSD)
+g.bind("sy", SY)
 
 # Bind the namespaces to a prefix for more readable output
 g.bind("xsd", XSD)

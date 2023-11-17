@@ -235,6 +235,7 @@ names = [
 csvData = pd.read_csv(syUrls, sep=",", usecols=names)
 csvData.info()
 
+addedVideos = []
 
 # iterate over the csv data
 for index, row in csvData.iterrows():
@@ -253,7 +254,11 @@ for index, row in csvData.iterrows():
     )
     song = URIRef(SY[row["Uri"]])
 
-    if (video, RDF.type, SY.Video) not in g:
+    if row["Url_youtube"].split("=")[-1] in addedVideos:
+        continue
+    else:
+        addedVideos.append(row["Url_youtube"].split("=")[-1])
+
         g.add((video, RDF.type, SY.YoutubeVideo))
         g.add(
             (
