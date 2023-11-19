@@ -1,17 +1,27 @@
+# required libraries
 import pandas as pd
 import os
 from pathlib import Path
-from rdflib import Graph, Literal, RDF, URIRef, Namespace
-from rdflib.namespace import FOAF, XSD, SKOS
 
 # parameters and URLs
 path = str(Path(os.path.abspath(os.getcwd())).parent.absolute())
 print(path)
-syUrls = path + "/Datasets/Computed/complete_dataset.csv"
+syUrls = path + "/Desktop/Datasets/Computed/complete_dataset.csv"
 
 # saving folder
-savePath = path + "/Datasets/rdf/"
+savePath = path + "/Desktop/Datasets/rdf/"
 
+# Load the CSV files in memory
+names = ["Url_spotify", "Artist"]
+artists = pd.read_csv(syUrls, sep=",", index_col="Url_spotify", usecols=names)
+
+artists.info()
+
+# Load the required libraries
+from rdflib import Graph, Literal, RDF, URIRef, Namespace
+
+# rdflib knows about some namespaces, like FOAF
+from rdflib.namespace import FOAF, XSD, SKOS
 
 # Construct the SpotifyYoutubeStatistics ontology namespaces not known by RDFlib
 SY = Namespace("http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/")
@@ -19,13 +29,6 @@ SY = Namespace("http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistic
 # create the graph
 g = Graph()
 
-
-# FRANCESCO
-# Load the CSV files in memory
-names = ["Url_spotify", "Artist"]
-artists = pd.read_csv(syUrls, sep=",", index_col="Url_spotify", usecols=names)
-
-artists.info()
 # iterate over the artists dataframe
 for index, row in artists.iterrows():
     # Create the node to add to the Graph
@@ -50,6 +53,7 @@ names = [
     "Tempo",
     "Duration_ms",
     "Stream",
+    "uStream"
 ]
 songs = pd.read_csv(syUrls, sep=",", index_col="Uri", usecols=names)
 
@@ -67,7 +71,7 @@ names1 = {
     "Liveness": "liveness",
     "Valence": "valence",
 }
-names2 = {"Key": "key", "Duration_ms": "duration"}
+names2 = {"Key": "key", "Duration_ms": "duration", "uStream": "stream"}
 
 # iterate over the songs dataframe
 for index, row in songs.iterrows():
@@ -86,6 +90,8 @@ for index, row in songs.iterrows():
         if pd.isnull(row[id]) == False:
             g.add((Song, SY[names2[id]], Literal(int(row[id]), datatype=XSD.integer)))
 
+"""
+
     # Add elements to the songsDict dictionary
     # the key is the song uri
     # the value is the greates stream value for the song.
@@ -101,8 +107,13 @@ for index in songsDict:
 
     g.add((Song, SY["stream"], Literal(songsDict[index], datatype=XSD.integer)))
 
-names = ["track_album_id", "Album"]
-albums = pd.read_csv(syUrls, sep=",", index_col="track_album_id", usecols=names)
+"""
+
+#names = ["track_album_id", "Album"]
+#albums = pd.read_csv(syUrls, sep=",", index_col="track_album_id", usecols=names)
+
+names = ["albumId", "Album"]
+albums = pd.read_csv(syUrls, sep=",", index_col="albumId", usecols=names)
 
 albums.info()
 
@@ -116,6 +127,76 @@ for index, row in albums.iterrows():
     if pd.isnull(index) == False:
         g.add((Album, RDF.type, SY.Album))
         g.add((Album, SY["albumName"], Literal(row["Album"], datatype=XSD.string)))
+
+# Load video
+names = [
+    "Url_youtube",
+    "Title",
+    "Channel",
+    "Views",
+    "Likes",
+    "Comments",
+    "Description",
+    "Licensed",
+    "official_video",
+    "channelId",
+    "uViews",
+    "uComments",
+    "uLikes",
+    "uOfficial_video"
+]
+videos = pd.read_csv(syUrls, sep=",", index_col="Url_youtube", usecols=names)
+
+videos.info()
+
+# iterate over the videos dataframe
+for index, row in videos.iterrows():
+    # Create the node to add to the Graph
+    # the node has the namespace + the album id as URI
+    Video = URIRef(SY[str(index).split("=")[-1]])
+    # Add triples using store's add() method.
+
+    if pd.isnull(index) == False:
+        g.add((Video, RDF.type, SY.YoutubeVideo))
+        g.add((Video, SY["videoTitle"], Literal(row["Title"], datatype=XSD.string)))
+#        if not pd.isnull(row["Views"]):
+#            g.add((Video, SY["views"], Literal(int(row["Views"]), datatype=XSD.integer)))
+        if not pd.isnull(row["uViews"]):
+            g.add((Video, SY["views"], Literal(int(row["uViews"]), datatype=XSD.integer)))
+#        if not pd.isnull(row["Likes"]):
+#            g.add((Video, SY["likes"], Literal(int(row["Likes"]), datatype=XSD.integer)))
+        if not pd.isnull(row["uLikes"]):
+            g.add((Video, SY["likes"], Literal(int(row["uLikes"]), datatype=XSD.integer)))
+#        if not pd.isnull(row["Comments"]):
+#            g.add((Video, SY["comments"], Literal(int(row["Comments"]), datatype=XSD.integer)))
+        if not pd.isnull(row["uComments"]):
+            g.add((Video, SY["comments"], Literal(int(row["uComments"]), datatype=XSD.integer)))
+        g.add((Video, SY["description"], Literal(row["Description"], datatype=XSD.string)))
+        g.add((Video, SY["licensed"], Literal(row["Licensed"], datatype=XSD.boolean)))
+#        g.add((Video, SY["officialVideo"], Literal(row["official_video"], datatype=XSD.boolean)))
+        if not pd.isnull(row["uOfficial_video"]):
+            g.add((Video, SY["officialVideo"], Literal(row["uOfficial_video"], datatype=XSD.boolean)))
+
+# Load channels
+names = [
+    "Channel",
+    "channelId"
+]
+channels = pd.read_csv(syUrls, sep=",", index_col="channelId", usecols=names)
+
+channels.info()
+
+# iterate over the videos dataframe
+for index, row in channels.iterrows():
+    # Create the node to add to the Graph
+    # the node has the namespace + the album id as URI
+    Channel = URIRef(SY[index])
+    # Add triples using store's add() method.
+
+    if pd.isnull(index) == False:
+        g.add((Channel, RDF.type, SY.YoutubeChannel))
+        g.add((Channel, SY["channelName"], Literal(row["Channel"], datatype=XSD.string)))
+
 
 names = ["Uri", "Url_spotify"]
 joinArtistSong = pd.read_csv(
@@ -139,9 +220,14 @@ for index, row in joinArtistSong.iterrows():
     g.add((Artist, SY["published"], Song))
     g.add((Song, SY["isPublishedBy"], Artist))
 
-names = ["track_album_id", "Album_type"]
+#names = ["track_album_id", "Album_type"]
+#joinAlbumAlbumtype = pd.read_csv(
+#    syUrls, sep=",", index_col="track_album_id", usecols=names
+#)
+
+names = ["albumId", "Album_type"]
 joinAlbumAlbumtype = pd.read_csv(
-    syUrls, sep=",", index_col="track_album_id", usecols=names
+    syUrls, sep=",", index_col="albumId", usecols=names
 )
 
 for index, row in joinAlbumAlbumtype.iterrows():
@@ -156,18 +242,71 @@ for index, row in joinAlbumAlbumtype.iterrows():
     if pd.isnull(index) == False:
         g.add((Album, SY["hasType"], Albumtype))
 
+names = ["Url_youtube", "Uri"]
+joinVideoSong = pd.read_csv(
+    syUrls,
+    sep=",",
+    index_col="Url_youtube",
+    keep_default_na=False,
+    na_values=["_"],
+    usecols=names,
+)
+
+for index, row in joinVideoSong.iterrows():
+    
+    if index == '':
+        continue
+
+    # Create the node about the video
+    # note that we do not add this resource to the database (created before)
+    Video = URIRef(SY[str(index).split("=")[-1]])
+
+    # Create the node about the song
+    # note that we do not add this resource to the database (created before)
+    Song = URIRef(SY[row["Uri"]])
+
+    g.add((Video, SY["isVideoOf"], Song))
+
+names = ["Url_youtube", "channelId"]
+joinVideoChannel = pd.read_csv(
+    syUrls,
+    sep=",",
+    index_col="Url_youtube",
+    keep_default_na=False,
+    na_values=["_"],
+    usecols=names,
+)
+
+for index, row in joinVideoChannel.iterrows():
+    
+    if index == '':
+        continue
+
+    # Create the node about the video
+    # note that we do not add this resource to the database (created before)
+    Video = URIRef(SY[str(index).split("=")[-1]])
+
+    # Create the node about the channel
+    # note that we do not add this resource to the database (created before)
+    Channel = URIRef(SY[row["channelId"]])
+
+    g.add((Video, SY["isUploadedBy"], Channel))
 
 # ANDREA
 # Load playlists and genres
-names = ["playlist_name", "playlist_id", "playlist_genre", "playlist_subgenre", "Uri"]
-csvData = pd.read_csv(syUrls, sep=",", usecols=names)
+names = ["playlist_id", "playlist_name", "playlist_id", "playlist_genre", "playlist_subgenre", "Uri"]
+csvData = pd.read_csv(syUrls, sep=",", index_col="playlist_id" , usecols=names)
 csvData.info()
 
 # iterate over the csv data
 for index, row in csvData.iterrows():
+
+    if pd.isnull(index):
+        continue
+
     # Create the node to add to the Graph
     # the node has the namespace + the id as URI
-    playlist = URIRef(SY[row["playlist_id"]])
+    playlist = URIRef(SY[index])
     genre = URIRef(SY[row["playlist_genre"]])
     Song = URIRef(SY[row["Uri"]])
 
@@ -213,123 +352,6 @@ for index, row in csvData.iterrows():
     g.add((playlist, SY["hasGenre"], subgenre))
     g.add((genre, SKOS.narrower, subgenre))  # SY['narrower']
     g.add((Song, SY["isPartOf"], playlist))
-
-
-# GIANLUCA
-# Load playlists and genres
-names = [
-    "Uri",
-    "Url_youtube",
-    "Title",
-    "Channel",
-    "Views",
-    "Likes",
-    "Comments",
-    "Description",
-    "Licensed",
-    "official_video",
-    "channelId",
-]
-
-
-csvData = pd.read_csv(syUrls, sep=",", usecols=names)
-csvData.info()
-
-addedVideos = []
-
-# iterate over the csv data
-for index, row in csvData.iterrows():
-    # Create the node to add to the Graph
-    # the node has the namespace + the id as URI
-    if pd.isnull(row["Url_youtube"]):
-        continue
-
-    video = URIRef(SY[row["Url_youtube"].split("=")[-1]])
-    channel = (
-        URIRef(SY[str(row["channelId"])])
-        if str(row["channelId"]) != ""
-        and str(row["channelId"]) != "nan"
-        and str(row["channelId"]) is not None
-        else None
-    )
-    song = URIRef(SY[row["Uri"]])
-
-    if row["Url_youtube"].split("=")[-1] in addedVideos:
-        continue
-    else:
-        addedVideos.append(row["Url_youtube"].split("=")[-1])
-
-        g.add((video, RDF.type, SY.YoutubeVideo))
-        g.add(
-            (
-                video,
-                SY["videoTitle"],
-                Literal(row["Title"], datatype=XSD.string),
-            )
-        )
-        if not pd.isnull(row["Views"]):
-            g.add(
-                (
-                    video,
-                    SY["views"],
-                    Literal(int(row["Views"]), datatype=XSD.integer),
-                )
-            )
-        if not pd.isnull(row["Likes"]):
-            g.add(
-                (
-                    video,
-                    SY["likes"],
-                    Literal(int(row["Likes"]), datatype=XSD.integer),
-                )
-            )
-        if not pd.isnull(row["Comments"]):
-            g.add(
-                (
-                    video,
-                    SY["comments"],
-                    Literal(int(row["Comments"]), datatype=XSD.integer),
-                )
-            )
-        g.add(
-            (
-                video,
-                SY["description"],
-                Literal(row["Description"], datatype=XSD.string),
-            )
-        )
-        g.add(
-            (
-                video,
-                SY["licensed"],
-                Literal(row["Licensed"], datatype=XSD.boolean),
-            )
-        )
-        g.add(
-            (
-                video,
-                SY["officialVideo"],
-                Literal(row["official_video"], datatype=XSD.boolean),
-            )
-        )
-
-    # if the channel isn't already in the addedChannels list add it
-    if channel is not None:
-        if (channel, RDF.type, SY.YoutubeChannel) not in g:
-            g.add((channel, RDF.type, SY.YoutubeChannel))
-
-        g.add(
-            (
-                channel,
-                SY["channelName"],
-                Literal(row["Channel"], datatype=XSD.string),
-            )
-        )
-
-    # add edges triples (links between nodes)
-    g.add((video, SY["isVideoOf"], song))
-    if channel is not None:
-        g.add((video, SY["isUploadedBy"], channel))
 
 
 # Bind the namespaces to a prefix for more readable output
