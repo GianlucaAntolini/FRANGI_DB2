@@ -70,8 +70,7 @@ xsd:date rdf:type rdfs:Datatype .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/isVideoOf
-:isVideoOf rdf:type owl:ObjectProperty ,
-                    owl:FunctionalProperty ;
+:isVideoOf rdf:type owl:ObjectProperty ;
            rdfs:domain :YoutubeVideo ;
            rdfs:range :SpotifySong ;
            rdfs:comment "A Youtube Video related to a Spotify Song." .
