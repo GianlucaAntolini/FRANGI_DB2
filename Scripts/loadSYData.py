@@ -329,6 +329,7 @@ for index, row in csvData.iterrows():
 
     if (genre, RDF.type, SY.Genre) not in g:
         g.add((genre, RDF.type, SY.Genre))
+        g.add((genre, RDF.type, SKOS.Concept))
         g.add(
             (
                 genre,
@@ -339,6 +340,7 @@ for index, row in csvData.iterrows():
 
     if (subgenre, RDF.type, SY.Genre) not in g:
         g.add((subgenre, RDF.type, SY.Genre))
+        g.add((subgenre, RDF.type, SKOS.Concept))
         g.add(
             (
                 subgenre,
