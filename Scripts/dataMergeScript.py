@@ -41,13 +41,22 @@ def writeLine(writerCD, rowSY, rowTF):
 
     albumId = ""
     if rowSY["Album"] != "" and rowSY["Album"] is not None:
-        if rowSY["Album"] in albumNamesIds:
-            albumId = albumNamesIds[rowSY["Album"]]
+        if rowSY["Album_type"] != "" and rowSY["Album_type"] is not None:
+            if (rowSY["Album"], rowSY["Album_type"]) in albumNamesIds:
+                albumId = albumNamesIds[(rowSY["Album"], rowSY["Album_type"])]
+            else:
+                # create a new album id : "album" + len(albumNamesIds)
+                albumId = "album" + str(len(albumNamesIds))
+                # add the album id to the map
+                albumNamesIds[(rowSY["Album"], rowSY["Album_type"])] = albumId
         else:
-            # create a new album id : "album" + len(albumNamesIds)
-            albumId = "album" + str(len(albumNamesIds))
-            # add the album id to the map
-            albumNamesIds[rowSY["Album"]] = albumId
+            if (rowSY["Album"], "") in albumNamesIds:
+                albumId = albumNamesIds[(rowSY["Album"], "")]
+            else:
+                # create a new album id : "album" + len(albumNamesIds)
+                albumId = "album" + str(len(albumNamesIds))
+                # add the album id to the map
+                albumNamesIds[(rowSY["Album"], "")] = albumId
 
     writerCD.writerow(
         {
