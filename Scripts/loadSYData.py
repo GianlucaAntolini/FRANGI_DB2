@@ -322,7 +322,7 @@ for index, row in csvData.iterrows():
         g.add(
             (
                 playlist,
-                SY["playlist_id"],
+                SY["playlistName"],
                 Literal(row["playlist_name"], datatype=XSD.string),
             )
         )
@@ -330,31 +330,17 @@ for index, row in csvData.iterrows():
     if (genre, RDF.type, SY.Genre) not in g:
         g.add((genre, RDF.type, SY.Genre))
         g.add((genre, RDF.type, SKOS.Concept))
-        g.add(
-            (
-                genre,
-                SY["playlist_genre"],
-                Literal(row["playlist_genre"], datatype=XSD.string),
-            )
-        )
 
     if (subgenre, RDF.type, SY.Genre) not in g:
         g.add((subgenre, RDF.type, SY.Genre))
         g.add((subgenre, RDF.type, SKOS.Concept))
-        g.add(
-            (
-                subgenre,
-                SY["playlist_subgenre"],
-                Literal(row["playlist_subgenre"], datatype=XSD.string),
-            )
-        )
 
     # add edges triples (links between nodes)
     g.add((playlist, SY["hasGenre"], genre))
     g.add((playlist, SY["hasGenre"], subgenre))
     g.add((genre, SKOS.narrower, subgenre))  # SY['narrower']
+    g.add((subgenre, SKOS.broader, genre))
     g.add((Song, SY["isPartOf"], playlist))
-
 
 # Bind the namespaces to a prefix for more readable output
 g.bind("xsd", XSD)
