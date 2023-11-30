@@ -25,6 +25,16 @@ xsd:date rdf:type rdfs:Datatype .
 #    Object Properties
 #################################################################
 
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics#isComposed
+:isComposed rdf:type owl:ObjectProperty ;
+            owl:inverseOf :belongsTo .
+
+
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics#upload
+:upload rdf:type owl:ObjectProperty ;
+        owl:inverseOf :isUploadedBy .
+
+
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/belongsTo
 :belongsTo rdf:type owl:ObjectProperty ,
                     owl:FunctionalProperty ;
@@ -38,14 +48,6 @@ xsd:date rdf:type rdfs:Datatype .
           rdfs:domain :SpotifyPlaylist ;
           rdfs:range :Genre ;
           rdfs:comment "A Spotify Playlist has a Genre." .
-
-
-###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/hasType
-:hasType rdf:type owl:ObjectProperty ,
-                  owl:FunctionalProperty ;
-         rdfs:domain :Album ;
-         rdfs:range :AlbumType ;
-         rdfs:comment "A Spotify Album that has a Type (Album, Single or Compilation)." .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/isPartOf
@@ -96,11 +98,19 @@ xsd:date rdf:type rdfs:Datatype .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/albumName
-:albumName rdf:type owl:DatatypeProperty ,
-                    owl:FunctionalProperty ;
+:albumName rdf:type owl:DatatypeProperty ;
+           rdfs:subPropertyOf owl:topDataProperty ;
+           rdf:type owl:FunctionalProperty ;
            rdfs:domain :Album ;
            rdfs:range xsd:string ;
            rdfs:comment "The name of the Album on Spotify." .
+
+
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/albumType
+:albumType rdf:type owl:DatatypeProperty ,
+                    owl:FunctionalProperty ;
+           rdfs:domain :Album ;
+           rdfs:range xsd:string .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/channelName
@@ -301,22 +311,29 @@ xsd:date rdf:type rdfs:Datatype .
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/Album
 :Album rdf:type owl:Class ;
-       owl:equivalentClass [ rdf:type owl:Restriction ;
-                             owl:onProperty :hasType ;
-                             owl:someValuesFrom :AlbumType
+       owl:equivalentClass [ owl:intersectionOf ( [ rdf:type owl:Restriction ;
+                                                    owl:onProperty :isComposed ;
+                                                    owl:someValuesFrom :SpotifySong
+                                                  ]
+                                                  [ rdf:type owl:Restriction ;
+                                                    owl:onProperty :albumType ;
+                                                    owl:someValuesFrom [ rdf:type rdfs:Datatype ;
+                                                                         owl:oneOf [ rdf:type rdf:List ;
+                                                                                     rdf:first "album" ;
+                                                                                     rdf:rest [ rdf:type rdf:List ;
+                                                                                                rdf:first "compilation" ;
+                                                                                                rdf:rest [ rdf:type rdf:List ;
+                                                                                                           rdf:first "single" ;
+                                                                                                           rdf:rest rdf:nil
+                                                                                                         ]
+                                                                                              ]
+                                                                                   ]
+                                                                       ]
+                                                  ]
+                                                ) ;
+                             rdf:type owl:Class
                            ] ;
        rdfs:comment "Class of the Spotify Album" .
-
-
-###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/AlbumType
-:AlbumType rdf:type owl:Class ;
-           owl:equivalentClass [ rdf:type owl:Class ;
-                                 owl:oneOf ( :album
-                                             :compilation
-                                             :single
-                                           )
-                               ] ;
-           rdfs:comment "Class that represents the type of a Spotify Album (Album, Single or Compilation)." .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/Artist
@@ -349,141 +366,81 @@ xsd:date rdf:type rdfs:Datatype .
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/SpotifySong
 :SpotifySong rdf:type owl:Class ;
-             owl:equivalentClass [ owl:intersectionOf ( [ rdf:type owl:Restriction ;
-                                                          owl:onProperty :belongsTo ;
-                                                          owl:someValuesFrom :Album
-                                                        ]
-                                                        [ rdf:type owl:Restriction ;
-                                                          owl:onProperty :isPublishedBy ;
-                                                          owl:someValuesFrom :Artist
-                                                        ]
-                                                      ) ;
-                                   rdf:type owl:Class
-                                 ] ;
              rdfs:subClassOf [ rdf:type owl:Restriction ;
                                owl:onProperty :acousticness ;
                                owl:someValuesFrom [ rdf:type rdfs:Datatype ;
-                                                    owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
-                                                                           owl:onDatatype xsd:float ;
-                                                                           owl:withRestrictions ( [ xsd:minInclusive "0.0"^^xsd:float
-                                                                                                  ]
-                                                                                                )
-                                                                         ]
-                                                                         [ rdf:type rdfs:Datatype ;
-                                                                           owl:onDatatype xsd:float ;
-                                                                           owl:withRestrictions ( [ xsd:maxInclusive "1.0"^^xsd:float
-                                                                                                  ]
-                                                                                                )
-                                                                         ]
-                                                                       )
+                                                    owl:onDatatype xsd:float ;
+                                                    owl:withRestrictions ( [ xsd:minInclusive "0.0"^^xsd:float
+                                                                           ]
+                                                                           [ xsd:maxInclusive "1.0"^^xsd:float
+                                                                           ]
+                                                                         )
                                                   ]
                              ] ,
                              [ rdf:type owl:Restriction ;
                                owl:onProperty :danceability ;
                                owl:someValuesFrom [ rdf:type rdfs:Datatype ;
-                                                    owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
-                                                                           owl:onDatatype xsd:float ;
-                                                                           owl:withRestrictions ( [ xsd:minInclusive "0.0"^^xsd:float
-                                                                                                  ]
-                                                                                                )
-                                                                         ]
-                                                                         [ rdf:type rdfs:Datatype ;
-                                                                           owl:onDatatype xsd:float ;
-                                                                           owl:withRestrictions ( [ xsd:maxInclusive "1.0"^^xsd:float
-                                                                                                  ]
-                                                                                                )
-                                                                         ]
-                                                                       )
+                                                    owl:onDatatype xsd:float ;
+                                                    owl:withRestrictions ( [ xsd:minInclusive "0.0"^^xsd:float
+                                                                           ]
+                                                                           [ xsd:maxInclusive "1.0"^^xsd:float
+                                                                           ]
+                                                                         )
                                                   ]
                              ] ,
                              [ rdf:type owl:Restriction ;
                                owl:onProperty :energy ;
                                owl:someValuesFrom [ rdf:type rdfs:Datatype ;
-                                                    owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
-                                                                           owl:onDatatype xsd:float ;
-                                                                           owl:withRestrictions ( [ xsd:minInclusive "0.0"^^xsd:float
-                                                                                                  ]
-                                                                                                )
-                                                                         ]
-                                                                         [ rdf:type rdfs:Datatype ;
-                                                                           owl:onDatatype xsd:float ;
-                                                                           owl:withRestrictions ( [ xsd:maxInclusive "1.0"^^xsd:float
-                                                                                                  ]
-                                                                                                )
-                                                                         ]
-                                                                       )
+                                                    owl:onDatatype xsd:float ;
+                                                    owl:withRestrictions ( [ xsd:minInclusive "0.0"^^xsd:float
+                                                                           ]
+                                                                           [ xsd:maxInclusive "1.0"^^xsd:float
+                                                                           ]
+                                                                         )
                                                   ]
                              ] ,
                              [ rdf:type owl:Restriction ;
                                owl:onProperty :instrumentalness ;
                                owl:someValuesFrom [ rdf:type rdfs:Datatype ;
-                                                    owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
-                                                                           owl:onDatatype xsd:float ;
-                                                                           owl:withRestrictions ( [ xsd:minInclusive "0.0"^^xsd:float
-                                                                                                  ]
-                                                                                                )
-                                                                         ]
-                                                                         [ rdf:type rdfs:Datatype ;
-                                                                           owl:onDatatype xsd:float ;
-                                                                           owl:withRestrictions ( [ xsd:maxInclusive "1.0"^^xsd:float
-                                                                                                  ]
-                                                                                                )
-                                                                         ]
-                                                                       )
+                                                    owl:onDatatype xsd:float ;
+                                                    owl:withRestrictions ( [ xsd:minInclusive "0.0"^^xsd:float
+                                                                           ]
+                                                                           [ xsd:maxInclusive "1.0"^^xsd:float
+                                                                           ]
+                                                                         )
                                                   ]
                              ] ,
                              [ rdf:type owl:Restriction ;
                                owl:onProperty :liveness ;
                                owl:someValuesFrom [ rdf:type rdfs:Datatype ;
-                                                    owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
-                                                                           owl:onDatatype xsd:float ;
-                                                                           owl:withRestrictions ( [ xsd:minInclusive "0.0"^^xsd:float
-                                                                                                  ]
-                                                                                                )
-                                                                         ]
-                                                                         [ rdf:type rdfs:Datatype ;
-                                                                           owl:onDatatype xsd:float ;
-                                                                           owl:withRestrictions ( [ xsd:maxInclusive "1.0"^^xsd:float
-                                                                                                  ]
-                                                                                                )
-                                                                         ]
-                                                                       )
+                                                    owl:onDatatype xsd:float ;
+                                                    owl:withRestrictions ( [ xsd:minInclusive "0.0"^^xsd:float
+                                                                           ]
+                                                                           [ xsd:maxInclusive "1.0"^^xsd:float
+                                                                           ]
+                                                                         )
                                                   ]
                              ] ,
                              [ rdf:type owl:Restriction ;
                                owl:onProperty :speechiness ;
                                owl:someValuesFrom [ rdf:type rdfs:Datatype ;
-                                                    owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
-                                                                           owl:onDatatype xsd:float ;
-                                                                           owl:withRestrictions ( [ xsd:minInclusive "0.0"^^xsd:float
-                                                                                                  ]
-                                                                                                )
-                                                                         ]
-                                                                         [ rdf:type rdfs:Datatype ;
-                                                                           owl:onDatatype xsd:float ;
-                                                                           owl:withRestrictions ( [ xsd:maxInclusive "1.0"^^xsd:float
-                                                                                                  ]
-                                                                                                )
-                                                                         ]
-                                                                       )
+                                                    owl:onDatatype xsd:float ;
+                                                    owl:withRestrictions ( [ xsd:minInclusive "0.0"^^xsd:float
+                                                                           ]
+                                                                           [ xsd:maxInclusive "1.0"^^xsd:float
+                                                                           ]
+                                                                         )
                                                   ]
                              ] ,
                              [ rdf:type owl:Restriction ;
                                owl:onProperty :valence ;
                                owl:someValuesFrom [ rdf:type rdfs:Datatype ;
-                                                    owl:intersectionOf ( [ rdf:type rdfs:Datatype ;
-                                                                           owl:onDatatype xsd:float ;
-                                                                           owl:withRestrictions ( [ xsd:minInclusive "0.0"^^xsd:float
-                                                                                                  ]
-                                                                                                )
-                                                                         ]
-                                                                         [ rdf:type rdfs:Datatype ;
-                                                                           owl:onDatatype xsd:float ;
-                                                                           owl:withRestrictions ( [ xsd:maxInclusive "1.0"^^xsd:float
-                                                                                                  ]
-                                                                                                )
-                                                                         ]
-                                                                       )
+                                                    owl:onDatatype xsd:float ;
+                                                    owl:withRestrictions ( [ xsd:minInclusive "0.0"^^xsd:float
+                                                                           ]
+                                                                           [ xsd:maxInclusive "1.0"^^xsd:float
+                                                                           ]
+                                                                         )
                                                   ]
                              ] ;
              rdfs:comment "Class of the songs published on Spotify." .
@@ -491,21 +448,18 @@ xsd:date rdf:type rdfs:Datatype .
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/YoutubeChannel
 :YoutubeChannel rdf:type owl:Class ;
+                owl:equivalentClass [ rdf:type owl:Restriction ;
+                                      owl:onProperty :upload ;
+                                      owl:someValuesFrom :YoutubeVideo
+                                    ] ;
                 rdfs:comment "Class of the Youtube Channel that have uploaded a official (or unofficial) video of a Spotify Song." .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/YoutubeVideo
 :YoutubeVideo rdf:type owl:Class ;
-              owl:equivalentClass [ owl:intersectionOf ( [ rdf:type owl:Restriction ;
-                                                           owl:onProperty :isUploadedBy ;
-                                                           owl:someValuesFrom :YoutubeChannel
-                                                         ]
-                                                         [ rdf:type owl:Restriction ;
-                                                           owl:onProperty :isVideoOf ;
-                                                           owl:someValuesFrom :SpotifySong
-                                                         ]
-                                                       ) ;
-                                    rdf:type owl:Class
+              owl:equivalentClass [ rdf:type owl:Restriction ;
+                                    owl:onProperty :isVideoOf ;
+                                    owl:someValuesFrom :SpotifySong
                                   ] ;
               rdfs:comment "Class of the Youtube Videos related to a Spotify Song." .
 
@@ -529,38 +483,9 @@ xsd:date rdf:type rdfs:Datatype .
                             :Person .
 
 
-###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/album
-:album rdf:type owl:NamedIndividual ,
-                :AlbumType ;
-       rdfs:comment "Class of Spotify Albums that contain Spotify Songs." .
-
-
-###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/compilation
-:compilation rdf:type owl:NamedIndividual ,
-                      :AlbumType .
-
-
-###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/single
-:single rdf:type owl:NamedIndividual ,
-                 :AlbumType .
-
-
 #################################################################
 #    General axioms
 #################################################################
-
-[ rdf:type owl:AllDisjointClasses ;
-  owl:members ( :Album
-                :AlbumType
-                :Genre
-                :Person
-                :SpotifyPlaylist
-                :SpotifySong
-                :YoutubeChannel
-                :YoutubeVideo
-              )
-] .
-
 
 [ rdf:type owl:AllDifferent ;
   owl:distinctMembers ( :Andrea_Felline
