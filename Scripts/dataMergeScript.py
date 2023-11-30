@@ -1,4 +1,6 @@
 import csv
+import os
+from pathlib import Path
 
 
 # map of string:string called channelNamesIds
@@ -10,14 +12,23 @@ songsDict = {}
 
 videosDict = {}
 
+path = str(Path(os.path.abspath(os.getcwd())).parent.absolute())
+
+
 def updateLine(rowSY):
     if rowSY["Stream"] != "" and rowSY["Stream"] is not None:
         if (rowSY["Uri"] not in songsDict) or (
-            (rowSY["Uri"] in songsDict) and (int(rowSY["Stream"]) > songsDict[rowSY["Uri"]])
+            (rowSY["Uri"] in songsDict)
+            and (int(rowSY["Stream"]) > songsDict[rowSY["Uri"]])
         ):
             songsDict[rowSY["Uri"]] = int(rowSY["Stream"])
     if rowSY["official_video"] not in videosDict:
-        videosDict[rowSY["Url_youtube"]] = [rowSY["Comments"], rowSY["Likes"], rowSY["Views"], rowSY["official_video"]]
+        videosDict[rowSY["Url_youtube"]] = [
+            rowSY["Comments"],
+            rowSY["Likes"],
+            rowSY["Views"],
+            rowSY["official_video"],
+        ]
     else:
         if rowSY["Comments"] != "" and rowSY["Comments"] is not None:
             videosDict[rowSY["Url_youtube"]][0] = rowSY["Comments"]
@@ -27,6 +38,7 @@ def updateLine(rowSY):
             videosDict[rowSY["Url_youtube"]][2] = rowSY["Views"]
         if rowSY["official_video"] != "" and rowSY["official_video"] is not None:
             videosDict[rowSY["Url_youtube"]][3] = rowSY["official_video"]
+
 
 def writeLine(writerCD, rowSY, rowTF):
     channelId = ""
@@ -100,41 +112,54 @@ def writeLine(writerCD, rowSY, rowTF):
             else "",
             # generated channel id
             "channelId": channelId,
-            #generate album id
+            # generate album id
             "albumId": albumId,
             # updated stream values
-            "uStream": songsDict[rowSY["Uri"]] if rowSY["Uri"] in songsDict
-            else "",
+            "uStream": songsDict[rowSY["Uri"]] if rowSY["Uri"] in songsDict else "",
             # updated comments values
-            "uComments": videosDict[rowSY["Url_youtube"]][0] if rowSY["Url_youtube"] in videosDict
+            "uComments": videosDict[rowSY["Url_youtube"]][0]
+            if rowSY["Url_youtube"] in videosDict
             else "",
             # updated likes values
-            "uLikes": videosDict[rowSY["Url_youtube"]][1] if rowSY["Url_youtube"] in videosDict
+            "uLikes": videosDict[rowSY["Url_youtube"]][1]
+            if rowSY["Url_youtube"] in videosDict
             else "",
             # updated views values
-            "uViews": videosDict[rowSY["Url_youtube"]][2] if rowSY["Url_youtube"] in videosDict
+            "uViews": videosDict[rowSY["Url_youtube"]][2]
+            if rowSY["Url_youtube"] in videosDict
             else "",
             # updated official_video values
-            "uOfficial_video": videosDict[rowSY["Url_youtube"]][3] if rowSY["Url_youtube"] in videosDict
+            "uOfficial_video": videosDict[rowSY["Url_youtube"]][3]
+            if rowSY["Url_youtube"] in videosDict
             else "",
         }
     )
 
+
 # open file to save stream values
-with open("../Datasets/Original/Spotify_Youtube.csv", "r", newline="", encoding = "utf-8") as fileSY:
+with open(
+    path + "/Datasets/Original/Spotify_Youtube.csv", "r", newline="", encoding="utf-8"
+) as fileSY:
     readerSY = csv.DictReader(fileSY)
     for rowSY in readerSY:
         updateLine(rowSY)
 
 # Open and read the csv files
-with open("../Datasets/Original/Spotify_Youtube.csv", "r", newline="", encoding = "utf-8") as fileSY:
+with open(
+    path + "/Datasets/Original/Spotify_Youtube.csv", "r", newline="", encoding="utf-8"
+) as fileSY:
     readerSY = csv.DictReader(fileSY)
-    with open("../Datasets/Original/spotify_songs.csv", "r", newline="", encoding = "utf-8") as fileTF:
+    with open(
+        path + "/Datasets/Original/spotify_songs.csv", "r", newline="", encoding="utf-8"
+    ) as fileTF:
         readerTF = csv.DictReader(fileTF)
 
         trackIdSY = ""
         with open(
-            "../Datasets/Computed/complete_dataset.csv", "w", newline="", encoding = "utf-8"
+            "../Datasets/Computed/complete_dataset.csv",
+            "w",
+            newline="",
+            encoding="utf-8",
         ) as fileCD:
             fieldNamesCD = [
                 # here start all the fields from the spotify_youtube_with_id_sorted.csv
@@ -174,13 +199,13 @@ with open("../Datasets/Original/Spotify_Youtube.csv", "r", newline="", encoding 
                 "playlist_subgenre",
                 # additional channel id
                 "channelId",
-                #additional album id,
+                # additional album id,
                 "albumId",
                 "uStream",
                 "uComments",
                 "uLikes",
                 "uViews",
-                "uOfficial_video"
+                "uOfficial_video",
             ]
             writerCD = csv.DictWriter(fileCD, fieldnames=fieldNamesCD)
 
