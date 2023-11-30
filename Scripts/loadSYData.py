@@ -6,10 +6,10 @@ from pathlib import Path
 # parameters and URLs
 path = str(Path(os.path.abspath(os.getcwd())).parent.absolute())
 print(path)
-syUrls = path + "/Desktop/Datasets/Computed/complete_dataset.csv"
+syUrls = path + "/Datasets/Computed/complete_dataset.csv"
 
 # saving folder
-savePath = path + "/Desktop/Datasets/rdf/"
+savePath = path + "/Datasets/rdf/"
 
 # Load the CSV files in memory
 names = ["Url_spotify", "Artist"]

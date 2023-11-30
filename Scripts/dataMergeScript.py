@@ -121,20 +121,20 @@ def writeLine(writerCD, rowSY, rowTF):
     )
 
 # open file to save stream values
-with open("Datasets/Original/Spotify_Youtube.csv", "r", newline="", encoding = "utf-8") as fileSY:
+with open("../Datasets/Original/Spotify_Youtube.csv", "r", newline="", encoding = "utf-8") as fileSY:
     readerSY = csv.DictReader(fileSY)
     for rowSY in readerSY:
         updateLine(rowSY)
 
 # Open and read the csv files
-with open("Datasets/Original/Spotify_Youtube.csv", "r", newline="", encoding = "utf-8") as fileSY:
+with open("../Datasets/Original/Spotify_Youtube.csv", "r", newline="", encoding = "utf-8") as fileSY:
     readerSY = csv.DictReader(fileSY)
-    with open("Datasets/Original/spotify_songs.csv", "r", newline="", encoding = "utf-8") as fileTF:
+    with open("../Datasets/Original/spotify_songs.csv", "r", newline="", encoding = "utf-8") as fileTF:
         readerTF = csv.DictReader(fileTF)
 
         trackIdSY = ""
         with open(
-            "Datasets/Computed/complete_dataset.csv", "w", newline="", encoding = "utf-8"
+            "../Datasets/Computed/complete_dataset.csv", "w", newline="", encoding = "utf-8"
         ) as fileCD:
             fieldNamesCD = [
                 # here start all the fields from the spotify_youtube_with_id_sorted.csv
