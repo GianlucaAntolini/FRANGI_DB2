@@ -6,13 +6,26 @@ We first designed and created the ontology for the data using Protegè, then we 
 
 The following are the queries that we decided to create:
 ...
+Francesco:
  1 - Top 10 song by number of streams
  2 - Song with max duration for each playlist, ordered by duration
  3 - Artist that wrote more songs
  4 - Artist that produced the most streams
- 5 - Channel that had the most total streams or likes or comments (among all the published songs)
- 6 - The playlist with most song is the one with most streams/ likes/ bigger total duration?
- 7 - Correspondence between artist and genre (by number of songs in a playlist of such genre)
+
+Andrea:
+ 1 - Channel that had the most total streams or likes or comments (among all the published songs)
+ 2 - The playlist with most song is the one with most streams/ likes/ bigger total duration?
+ 3 - Correspondence between artist and genre (by number of songs in a playlist of such genre)
+ 4 - 
+
+Gianluca:
+ 1 - 
+ 2 - 
+ 3 - 
+ 4 - 
+
+Insieme:
+ 1 - Relazione tra visualizzazioni di un video e ascolti della corrispondente canzone su Spotify
 ...
 
 
