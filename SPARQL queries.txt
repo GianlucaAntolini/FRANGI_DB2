@@ -1,0 +1,66 @@
+prefix sy: <http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/>
+
+1 - Top 10 song by number of streams
+
+select distinct (group_concat(distinct ?aName ; separator=", ") as ?aNames) ?sName ?streams where {
+    ?artist sy:published ?song ;
+            sy:personName ?aName .
+    ?song sy:trackName ?sName ;
+          sy:stream ?streams .
+}
+group by ?sName ?streams
+order by desc (?streams)
+limit 10
+
+2 - Song with max duration for each playlist
+
+select distinct ?pName ?sName ?duration where {
+    ?song sy:isPartOf ?playlist ;
+          sy:trackName ?sName ;
+          sy:duration ?duration .
+    ?playlist sy:playlistName ?pName .
+    {
+        select distinct ?pName1 (MAX(?duration1) as ?mDuration) where{
+    		?song1 sy:isPartOf ?playlist1 ;
+    		   	   sy:duration ?duration1 .
+    		?playlist1 sy:playlistName ?pName1 .
+		}
+        group by ?pName1
+    }
+    filter (?pName = ?pName1 && ?duration = ?mDuration)
+}
+order by desc (?duration)
+
+3 - Artist that wrote more songs
+
+select ?aName (count(?song) as ?nSongs) where{
+    ?artist sy:personName ?aName ;
+            sy:published ?song .
+}
+group by ?aName
+order by desc(?nSongs)
+limit 1
+
+or
+
+select (count(?artist) as ?nArtists) ?songs where{
+    {
+		select ?artist (count(?song) as ?songs) where{
+			?artist sy:published ?song .
+		}
+		group by ?artist
+		order by desc(?songs)
+    }
+}
+group by ?songs
+
+4 - Artist that produced the most streams
+
+select ?aName (sum(?stream) as ?streams) where{
+	?artist sy:personName ?aName ;
+         sy:published ?song .
+    ?song sy:stream ?stream.
+}
+group by ?aName
+order by desc(?streams)
+limit 1
