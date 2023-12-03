@@ -64,3 +64,106 @@ select ?aName (sum(?stream) as ?streams) where{
 group by ?aName
 order by desc(?streams)
 limit 1
+
+5 - First 10 channels by number of views, with also likes and comments
+
+select distinct (sum(?views) as ?totalViews) (sum(?likes) as ?totalLikes) (sum(?comments) as ?totalComments) ?name where{
+    ?video rdf:type sy:YoutubeVideo;
+            sy:views ?views;
+            sy:likes ?likes;
+            sy:comments ?comments;
+            sy:videoTitle ?title;
+            sy:isUploadedBy ?channel.
+    ?channel sy:channelName ?name.
+}
+group by ?name
+order by desc(?totalViews)
+limit 10
+
+6 - The playlist with most song is the one with most streams?
+
+ask where{
+    {
+        select ?playlist1 (count(?song) as ?songs) where{
+        	?playlist1 rdf:type sy:SpotifyPlaylist;
+                  ^sy:isPartOf ?song.
+    	}
+        group by ?playlist1
+        order by desc(?songs)
+        limit 1
+    }.
+    
+    {
+        select ?playlist2 (sum(?streams) as ?totalStreams) where{
+            ?playlist2 rdf:type sy:SpotifyPlaylist;
+                      ^sy:isPartOf ?song.
+            ?song sy:stream ?streams;
+        }    
+        group by ?playlist2
+        order by desc(?totalStreams)
+        limit 1
+    }.
+    
+    filter(?playlist1 = ?playlist2)
+}
+
+7 - Correspondence between artist and genre (by number of songs in a playlist of such genre)
+
+select ?artistName (group_concat(?genre1; separator=" ,") as ?genres) ?n where {
+	{
+        select ?artistName1 ?genre1 (COUNT(?song1) as ?numSongs1) where {
+            ?song1 :isPartOf ?playlist1;
+                  :trackName ?songName1;
+                  :isPublishedBy ?artist1.
+            ?artist1 :personName ?artistName1.
+            ?playlist1 rdf:type :SpotifyPlaylist;
+                      :hasGenre ?genre1.
+        }
+        group by ?artistName1 ?genre1
+        order by ?artistName1 desc(?numSongs1)
+    }.
+    {
+        select ?artistName (max(?numSongs) as ?n) where {
+          {
+            select ?artistName ?genre (COUNT(?song) as ?numSongs) where {
+              ?song :isPartOf ?playlist;
+                    :trackName ?songName;
+                    :isPublishedBy ?artist.
+              ?artist :personName ?artistName.
+              ?playlist rdf:type :SpotifyPlaylist;
+                        :hasGenre ?genre.
+            }
+            group by ?artistName ?genre
+            order by ?artistName desc(?numSongs)
+          }
+        }
+        group by ?artistName
+
+    }.
+    filter(?artistName = ?artistName1 && ?numSongs1 = ?n)
+}
+group by ?artistName ?n
+
+8.1 - Most common five genres among playlists
+
+select ?genre (count(?playlist) as ?numPlaylists) where {
+    ?playlist rdf:type :SpotifyPlaylist;
+              :hasGenre ?genre.
+}
+group by ?genre
+order by desc(?numPlaylists)
+limit 5
+
+8.2 - Genre of top 5 playlists with most played songs
+
+select ?mainGenre ?PLname (sum(?streams) as ?totalStreams) where {
+    ?playlist rdf:type :SpotifyPlaylist;
+              :hasGenre ?mainGenre;
+              ^:isPartOf ?song;
+               :playlistName ?PLname.
+    ?song :stream ?streams.
+    ?mainGenre skos:narrower ?subGenre.
+}
+group by ?PLname ?mainGenre
+order by desc(?totalStreams)
+limit 5

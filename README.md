@@ -13,14 +13,14 @@ Francesco:
  4 - Artist that produced the most streams
 
 Andrea:
- 1 - Channel that had the most total streams or likes or comments (among all the published songs)
- 2 - The playlist with most song is the one with most streams/ likes/ bigger total duration?
+ 1 - First 10 channels by number of views, with also likes and comments
+ 2 - The playlist with most song is the one with most streams?
  3 - Correspondence between artist and genre (by number of songs in a playlist of such genre)
- 4 - 
+ 4 - Top genre based on something (genres of playlists with most played songs or most common genre among playlists)
 
 Gianluca:
- 1 - 
- 2 - 
+ 1 - Pairs of songs with similar tempo and key (useful for djs)
+ 2 - Top 10 song based on in how many palylists they appears (to be compared with top 10 songs by streams)
  3 - 
  4 - 
 
