@@ -156,14 +156,40 @@ limit 5
 
 8.2 - Genre of top 5 playlists with most played songs
 
-select ?mainGenre ?PLname (sum(?streams) as ?totalStreams) where {
-    ?playlist rdf:type :SpotifyPlaylist;
-              :hasGenre ?mainGenre;
-              ^:isPartOf ?song;
-               :playlistName ?PLname.
-    ?song :stream ?streams.
-    ?mainGenre skos:narrower ?subGenre.
+select ?pName (group_concat(distinct ?gName ; separator = ", ") as ?genres) ?streams where{
+	{ 
+        select ?pName ?gName (sum(?stream) as ?streams) where{
+    		?playlist sy:playlistName ?pName ;
+                      sy:hasGenre ?genre .
+    		?song sy:isPartOf ?playlist ;
+        	  	  sy:stream ?stream .
+            ?genre sy:genreName ?gName .
+		}
+        group by ?pName ?gName
+        order by desc(?streams)
+    }
 }
-group by ?PLname ?mainGenre
-order by desc(?totalStreams)
+group by ?pName ?streams
+limit 5
+
+or 
+
+select distinct ?pName ?gName ?streams where{
+    ?playlist1 sy:playlistName ?pName1 ;
+              sy:hasGenre ?genre1 .
+    ?genre1 skos:narrower ?subgenre ;
+          	sy:genreName ?gName1 .
+	{ 
+        select ?pName ?gName (sum(?stream) as ?streams) where{
+    		?playlist sy:playlistName ?pName ;
+                      sy:hasGenre ?genre .
+    		?song sy:isPartOf ?playlist ;
+        	  	  sy:stream ?stream .
+            ?genre sy:genreName ?gName .
+		}
+        group by ?pName ?gName
+        order by desc(?streams)
+    }
+    filter (?pName1 = ?pName && ?gName1 = ?gName)
+}
 limit 5
