@@ -321,7 +321,7 @@ names = [
     "playlist_id",
     "playlist_genre",
     "playlist_subgenre",
-    "Uri",
+    "Uri"
 ]
 csvData = pd.read_csv(syUrls, sep=",", index_col="playlist_id", usecols=names)
 csvData.info()
@@ -350,17 +350,19 @@ for index, row in csvData.iterrows():
             (
                 playlist,
                 SY["playlistName"],
-                Literal(row["playlist_name"], datatype=XSD.string),
+                Literal(row["playlist_name"], datatype=XSD.string)
             )
         )
 
     if (genre, RDF.type, SY.Genre) not in g:
         g.add((genre, RDF.type, SY.Genre))
         g.add((genre, RDF.type, SKOS.Concept))
+        g.add((genre, SY["genreName"], Literal(row["playlist_genre"], datatype=XSD.string)))
 
     if (subgenre, RDF.type, SY.Genre) not in g:
         g.add((subgenre, RDF.type, SY.Genre))
         g.add((subgenre, RDF.type, SKOS.Concept))
+        g.add((subgenre, SY["genreName"], Literal(formattedSubgenre, datatype=XSD.string)))
 
     # add edges triples (links between nodes)
     g.add((playlist, SY["hasGenre"], genre))
