@@ -20,8 +20,8 @@ Andrea:
 
 Gianluca:
  1 - Random pair of songs that have similar tempo and key (useful for djs)
- 2 - Top 10 song based on in how many palylists they appears (to be compared with top 10 songs by streams)
- 3 - 
+ 2 - Average number of views of songs for the 3 types of Album types
+ 3 - In average, are n of streams of a song higher than the n of views of their related yt video?
  4 - 
 
 Insieme:
