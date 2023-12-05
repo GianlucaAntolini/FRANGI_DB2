@@ -25,19 +25,10 @@ xsd:date rdf:type rdfs:Datatype .
 #    Object Properties
 #################################################################
 
-###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics#isComposed
-:isComposed rdf:type owl:ObjectProperty ;
-            owl:inverseOf :belongsTo .
-
-
-###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics#upload
-:upload rdf:type owl:ObjectProperty ;
-        owl:inverseOf :isUploadedBy .
-
-
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/belongsTo
-:belongsTo rdf:type owl:ObjectProperty ,
-                    owl:FunctionalProperty ;
+:belongsTo rdf:type owl:ObjectProperty ;
+           owl:inverseOf :isComposed ;
+           rdf:type owl:FunctionalProperty ;
            rdfs:domain :SpotifySong ;
            rdfs:range :Album ;
            rdfs:comment "A Spotify Song that belongs to a Spotify Album." .
@@ -48,6 +39,11 @@ xsd:date rdf:type rdfs:Datatype .
           rdfs:domain :SpotifyPlaylist ;
           rdfs:range :Genre ;
           rdfs:comment "A Spotify Playlist has a Genre." .
+
+
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/isComposed
+:isComposed rdf:type owl:ObjectProperty ;
+            rdfs:comment "An Album is composed by one or more SpotifySongs (depending on the type of Album)." .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/isPartOf
@@ -64,8 +60,9 @@ xsd:date rdf:type rdfs:Datatype .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/isUploadedBy
-:isUploadedBy rdf:type owl:ObjectProperty ,
-                       owl:FunctionalProperty ;
+:isUploadedBy rdf:type owl:ObjectProperty ;
+              owl:inverseOf :upload ;
+              rdf:type owl:FunctionalProperty ;
               rdfs:domain :YoutubeVideo ;
               rdfs:range :YoutubeChannel ;
               rdfs:comment "A Youtube Video uploaded by a Channel." .
@@ -83,6 +80,11 @@ xsd:date rdf:type rdfs:Datatype .
            rdfs:domain :Artist ;
            rdfs:range :SpotifySong ;
            rdfs:comment "An Artist publish a Spotify Song." .
+
+
+###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/upload
+:upload rdf:type owl:ObjectProperty ;
+        rdfs:comment "A YoutubeChannel uploads one or more YoutubeVideos." .
 
 
 #################################################################
@@ -110,7 +112,8 @@ xsd:date rdf:type rdfs:Datatype .
 :albumType rdf:type owl:DatatypeProperty ,
                     owl:FunctionalProperty ;
            rdfs:domain :Album ;
-           rdfs:range xsd:string .
+           rdfs:range xsd:string ;
+           rdfs:comment "The type of the album containing the song: possible options are only Album, Single or Compilation." .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/channelName
@@ -239,14 +242,6 @@ xsd:date rdf:type rdfs:Datatype .
               rdfs:domain :SpotifyPlaylist ;
               rdfs:range xsd:string ;
               rdfs:comment "The name of the Playlist." .
-
-
-###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/releaseDate
-:releaseDate rdf:type owl:DatatypeProperty ,
-                      owl:FunctionalProperty ;
-             rdfs:domain :Album ;
-             rdfs:range xsd:date ;
-             rdfs:comment "The release date of the Album." .
 
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/speechiness

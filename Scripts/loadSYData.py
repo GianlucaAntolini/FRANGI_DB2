@@ -69,6 +69,7 @@ names1 = {
     "Speechiness": "speechiness",
     "Acousticness": "acousticness",
     "Liveness": "liveness",
+    "Tempo": "tempo",
     "Valence": "valence",
 }
 names2 = {"Key": "key", "Duration_ms": "duration", "uStream": "stream"}
