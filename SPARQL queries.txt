@@ -241,5 +241,47 @@ WHERE {
 #Just keep one result (the first)
 LIMIT 1
 
+2: Average number of views of songs for the 3 types of Album types
+
+SELECT ?albumType (AVG(?streams) AS ?averageStreams) WHERE {
+  ?artist sy:published ?song ;
+          sy:personName ?aName .
+  ?song sy:trackName ?sName ;
+        sy:stream ?streams .
+  OPTIONAL {
+    ?song sy:belongsTo ?album .
+    ?album sy:albumType ?albumType .
+  }
+}
+GROUP BY ?albumType
+ORDER BY DESC(?averageStreams)
+
+
+3: In average, are n of streams of a song higher than the n of views of their related yt video?
+
+ASK
+WHERE {
+  {
+    SELECT (COUNT(?youtubeVideo) AS ?numVideosMoreViews)
+    WHERE {
+      ?youtubeVideo sy:isVideoOf ?spotifySong .
+      ?youtubeVideo sy:views ?views .
+      ?spotifySong sy:stream ?streams .
+      FILTER (?views > ?streams)
+    }
+  }
+  {
+    SELECT (COUNT(?youtubeVideo) AS ?numVideosLessViews)
+    WHERE {
+      ?youtubeVideo sy:isVideoOf ?spotifySong .
+      ?youtubeVideo sy:views ?views .
+      ?spotifySong sy:stream ?streams .
+      FILTER (?views < ?streams)
+    }
+  }
+  FILTER (?numVideosLessViews > ?numVideosMoreViews)
+}
+
+
 
 
