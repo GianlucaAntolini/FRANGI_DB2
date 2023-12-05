@@ -195,3 +195,51 @@ select distinct ?pName ?gName ?streams where{
 limit 5
 
 
+
+
+GIANLUCA:
+
+1: Random pair of songs that have similar tempo and key (useful for djs)
+
+SELECT ?inputSong ?inputTrackName ?inputKey ?inputTempo ?similarSong ?similarTrackName ?similarKey ?similarTempo
+WHERE {
+  {
+    # Get a random song 
+    SELECT ?inputSong ?inputTrackName ?inputKey ?inputTempo
+    WHERE {
+      ?inputSong a sy:SpotifySong ;
+                 sy:trackName ?inputTrackName ;
+                 sy:key ?inputKey ;
+                 sy:tempo ?inputTempo .
+    BIND(RAND() AS ?randOrder1)
+	}
+    ORDER BY ?randOrder1
+    LIMIT 1
+  }
+
+  # Get all the other songs but ordered randomly
+  {
+    SELECT ?similarSong ?similarTrackName ?similarKey ?similarTempo
+    WHERE {
+      ?similarSong a sy:SpotifySong ;
+                   sy:trackName ?similarTrackName ;
+                   sy:key ?similarKey ;
+                   sy:tempo ?similarTempo .
+
+    BIND(RAND() AS ?randOrder2)
+	}
+    ORDER BY ?randOrder2
+        
+    
+  }
+    #Filters to get matches
+    FILTER (?inputSong != ?similarSong)  # Ensure it's a different song (can happen that they are the same but very rare (different id but name is the same just written differently))
+    # Threshold for key and tempo can be changed
+  FILTER (ABS(?inputKey - ?similarKey) < 2)  
+  FILTER (ABS(?inputTempo - ?similarTempo) < 5.0)
+}
+#Just keep one result (the first)
+LIMIT 1
+
+
+

@@ -19,7 +19,7 @@ Andrea:
  4 - Top genre based on something (genres of playlists with most played songs or most common genre among playlists)
 
 Gianluca:
- 1 - Pairs of songs with similar tempo and key (useful for djs)
+ 1 - Random pair of songs that have similar tempo and key (useful for djs)
  2 - Top 10 song based on in how many palylists they appears (to be compared with top 10 songs by streams)
  3 - 
  4 - 
