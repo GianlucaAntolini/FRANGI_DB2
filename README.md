@@ -13,11 +13,17 @@ https://www.kaggle.com/datasets/sujaykapadnis/spotify-songs
 
 **Info**
 
- - Steps/order to generate the data to be imported in GraphDB:
-    1 run dataMergeScript.ipynb
-    2 run loadSYData.ipynb
- - As number of streams we took the maximum value when there were multiple values for the same video. We generated top level genres and subgenres by looking at the names of all the genres.
+ - Steps/order to generate the data to be imported in GraphDB:  
+      - run dataMergeScript.ipynb  
+      - run loadSYData.ipynb  
+ - As number of streams we took the maximum value when there were multiple values for the same video. We generated top level genres and subgenres by looking at the names of all the genres.  
  - The datasets (in the Datasets/Original folder) have been merged in a single file called complete_dataset.csv (in the Datasets/Computed folder). To create this file we created a script called dataMergeScript.ipynb in which we match the Spotify track ids of the songs and keep the information from both files.
+
+
+**Diagram**
+
+![alt text](https://github.com/GianlucaAntolini/FRANGI_DB2/blob/main/Ontology/syOntology.png)
+   
  
 **Queries**
 
