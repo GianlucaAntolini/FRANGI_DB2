@@ -41,10 +41,17 @@ The following are the queries that we decided to create:
    11 - Average number of views of songs for the 3 types of album types (single, compilation and album)  
    12 - Are number of streams of a song higher than the number of views of their related youtube video (in general)?  
    13 - Average ratios of views/likes and views/comments of videos that are the official video of the songs and the ones that are not  
-   14 - Top 10 channels by average of views on the videos they uploaded, with total number of views, likes, comments, and streams of the corresponding songs (simile alla 5, vedere quale tenere)   
+   14 - Top 10 channels by average of views on the videos they uploaded, with total number of views, likes, comments, and streams of the corresponding songs (simile alla 5, vedere quale tenere)
+   15 - Top 10 Artists by number of Albums published
 
-Insieme:  
- 1 - Relazione tra visualizzazioni di un video e ascolti della corrispondente canzone su Spotify
+   14 - Relazione tra visualizzazioni di un video e ascolti della corrispondente canzone su Spotify
 ...
 
  
+**TODO:**
+Gianluca:
+	- fix readme
+	- fix folders/files
+	- pdf of queries
+Andrea:
+	- jupyter notebook

@@ -31,17 +31,7 @@ select distinct ?pName ?sName ?duration where {
 }
 order by desc (?duration)
 
-3 - Artist that published more songs  
-
-select ?aName (count(?song) as ?nSongs) where{
-    ?artist sy:personName ?aName ;
-            sy:published ?song .
-}
-group by ?aName
-order by desc(?nSongs)
-limit 1
-
-or
+3 - How many Artists published x songs
 
 select (count(?artist) as ?nArtists) ?songs where{
     {
@@ -67,14 +57,16 @@ limit 1
 
 5 - Top 10 channels by number of views, with also likes and comments 
 
-select distinct (sum(?views) as ?totalViews) (sum(?likes) as ?totalLikes) (sum(?comments) as ?totalComments) ?name where{
+select distinct ?name (sum(?views) as ?totalViews) (sum(?likes) as ?totalLikes) (sum(?comments) as ?totalComments) (sum(?stream) as ?totalStreams) where{
     ?video rdf:type sy:YoutubeVideo;
             sy:views ?views;
             sy:likes ?likes;
             sy:comments ?comments;
             sy:videoTitle ?title;
-            sy:isUploadedBy ?channel.
+            sy:isUploadedBy ?channel;
+            sy:isVideoOf ?song.
     ?channel sy:channelName ?name.
+    ?song sy:stream ?stream.
 }
 group by ?name
 order by desc(?totalViews)
@@ -107,54 +99,17 @@ ask where{
     filter(?playlist1 = ?playlist2)
 }
 
-7 - Correspondence between artist and genre (by number of songs in a playlist of such genre)  
+7 - Most common 5 genres among playlists
 
-select ?artistName (group_concat(?genre1; separator=" ,") as ?genres) ?n where {
-	{
-        select ?artistName1 ?genre1 (COUNT(?song1) as ?numSongs1) where {
-            ?song1 :isPartOf ?playlist1;
-                  :trackName ?songName1;
-                  :isPublishedBy ?artist1.
-            ?artist1 :personName ?artistName1.
-            ?playlist1 rdf:type :SpotifyPlaylist;
-                      :hasGenre ?genre1.
-        }
-        group by ?artistName1 ?genre1
-        order by ?artistName1 desc(?numSongs1)
-    }.
-    {
-        select ?artistName (max(?numSongs) as ?n) where {
-          {
-            select ?artistName ?genre (COUNT(?song) as ?numSongs) where {
-              ?song :isPartOf ?playlist;
-                    :trackName ?songName;
-                    :isPublishedBy ?artist.
-              ?artist :personName ?artistName.
-              ?playlist rdf:type :SpotifyPlaylist;
-                        :hasGenre ?genre.
-            }
-            group by ?artistName ?genre
-            order by ?artistName desc(?numSongs)
-          }
-        }
-        group by ?artistName
-
-    }.
-    filter(?artistName = ?artistName1 && ?numSongs1 = ?n)
+select ?genreName (count(?playlist) as ?numPlaylists) where {
+    ?playlist sy:hasGenre ?genre.
+    ?genre sy:genreName ?genreName.
 }
-group by ?artistName ?n
-
-8 - Most common 5 genres among playlists
-
-select ?genre (count(?playlist) as ?numPlaylists) where {
-    ?playlist rdf:type :SpotifyPlaylist;
-              :hasGenre ?genre.
-}
-group by ?genre
+group by ?genreName
 order by desc(?numPlaylists)
 limit 5
 
-9 - Genre of top 5 playlists with most played songs
+8 - Genre of top 5 playlists with most played songs
 
 select ?pName (group_concat(distinct ?gName ; separator = ", ") as ?genres) ?streams where{
 	{ 
@@ -172,31 +127,9 @@ select ?pName (group_concat(distinct ?gName ; separator = ", ") as ?genres) ?str
 group by ?pName ?streams
 limit 5
 
-or 
+9 - Random pair of songs that have similar tempo and key (useful for djs)
 
-select distinct ?pName ?gName ?streams where{
-    ?playlist1 sy:playlistName ?pName1 ;
-              sy:hasGenre ?genre1 .
-    ?genre1 skos:narrower ?subgenre ;
-          	sy:genreName ?gName1 .
-	{ 
-        select ?pName ?gName (sum(?stream) as ?streams) where{
-    		?playlist sy:playlistName ?pName ;
-                      sy:hasGenre ?genre .
-    		?song sy:isPartOf ?playlist ;
-        	  	  sy:stream ?stream .
-            ?genre sy:genreName ?gName .
-		}
-        group by ?pName ?gName
-        order by desc(?streams)
-    }
-    filter (?pName1 = ?pName && ?gName1 = ?gName)
-}
-limit 5
-
-10 - Random pair of songs that have similar tempo and key (useful for djs)
-
-select ?inputSong ?inputTrackName ?inputKey ?inputTempo ?similarSong ?similarTrackName ?similarKey ?similarTempo
+select ?inputTrackName ?inputKey ?inputTempo ?similarTrackName ?similarKey ?similarTempo
 where {
   {
     # Get a random song 
@@ -230,29 +163,27 @@ where {
     #Filters to get matches
     filter (?inputSong != ?similarSong)  # Ensure it's a different song (can happen that they are the same but very rare (different id but name is the same just written differently))
     # Threshold for key and tempo can be changed
-  filter (abs(?inputKey - ?similarKey) < 2)  
+  filter (?inputKey = ?similarKey)  
   filter (abs(?inputTempo - ?similarTempo) < 5.0)
 }
 #Just keep one result (the first)
 limit 1
 
-11 - Average number of views of songs for the 3 types of album types (single, compilation and album)  
+10 - Average number of views of songs for the 3 types of album types (single, compilation and album)  
 
-select ?albumType (avg(?streams) as ?averageStreams) where {
+select ?albumType (round(avg(?streams)*100)/100 as ?averageStreams) where {
   ?artist sy:published ?song ;
           sy:personName ?aName .
   ?song sy:trackName ?sName ;
         sy:stream ?streams .
-  optional {
-    ?song sy:belongsTo ?album .
-    ?album sy:albumType ?albumType .
-  }
+  ?song sy:belongsTo ?album .
+  ?album sy:albumType ?albumType .
 }
-roup by ?albumType
+group by ?albumType
 order by desc(?averageStreams)
 
 
-12 - Are number of streams of a song higher than the number of views of their related youtube video (in general)?  
+11 - Are number of streams of a song higher than the number of views of their related youtube video (in general)?  
 
 ask
 where {
@@ -277,12 +208,12 @@ where {
   filter (?numVideosLessViews > ?numVideosMoreViews)
 }
 
-13 - Average ratios of views/likes and views/comments of videos that are the official video of the songs and the ones that are not  
+12 - Average ratios of views/likes and views/comments of videos that are the official video of the songs and the ones that are not  
 
 select ?avgRatioVLOfficial ?avgRatioVLUnofficial ?avgRatioVCOfficial ?avgRatioVCUnofficial
 where {
   {
-    select (avg(?viewsOfficial/?likesOfficial) as ?avgRatioVLOfficial)
+        select (round(avg(?viewsOfficial/?likesOfficial)*100)/100 as ?avgRatioVLOfficial)
     where {
       ?youtubeVideo sy:officialVideo true.
       ?youtubeVideo sy:views ?viewsOfficial.
@@ -290,7 +221,7 @@ where {
     }
   }
   {
-    select (avg(?viewsUnofficial/?likesUnofficial) as ?avgRatioVLUnofficial)
+    select (round(avg(?viewsUnofficial/?likesUnofficial)*100)/100 as ?avgRatioVLUnofficial)
     where {
       ?youtubeVideo sy:officialVideo false.
       ?youtubeVideo sy:views ?viewsUnofficial.
@@ -299,7 +230,7 @@ where {
   }
     
     {
-    select (avg(?viewsOfficial/?commentsOfficial) as ?avgRatioVCOfficial)
+    select (round(avg(?viewsOfficial/?commentsOfficial)*100)/100 as ?avgRatioVCOfficial)
     where {
       ?youtubeVideo sy:officialVideo true.
       ?youtubeVideo sy:views ?viewsOfficial.
@@ -307,7 +238,7 @@ where {
     }
   }
     {
-    select (avg(?viewsUnofficial/?commentsUnofficial) as ?avgRatioVCUnofficial)
+    select (round(avg(?viewsUnofficial/?commentsUnofficial)*100)/100 as ?avgRatioVCUnofficial)
     where {
       ?youtubeVideo sy:officialVideo false.
       ?youtubeVideo sy:views ?viewsUnofficial.
@@ -316,30 +247,30 @@ where {
   }
 }
 
-14 - Top 10 channels by average of views on the videos they uploaded, with total number of views, likes, comments, and streams of the corresponding songs (simile alla 5, vedere quale tenere) 
+13 - Top 10 Artists by number of Albums published
 
-select
-  ?channel ?channelName
-  (count(?video) as ?numVideos)
-  (sum(?views) as ?totalViews)
-  (sum(?likes) as ?totalLikes)
-  (sum(?comments) as ?totalComments)
-  (sum(?stream) as ?totalStreams)
-where {
-  ?video sy:isUploadedBy ?channel.
-  ?channel sy:channelName ?channelName.
-  optional { ?video sy:views ?views }
-  optional { ?video sy:likes ?likes }
-  optional { ?video sy:comments ?comments }
-  ?video sy:isVideoOf ?spotifySong .
-  ?spotifySong sy:stream ?stream .
-}
-group by ?channel ?channelName
-order by desc(?totalViews/?numVideos)
+select ?artistName (count(?album) as ?albums) where{
+    {
+        select distinct ?artistName ?album where {
+            ?artist sy:published ?song ;
+                    sy:personName ?artistName .
+            ?song sy:belongsTo ?album .
+            ?album sy:albumType ?aType .
+            filter (?aType = "album"^^xsd:string)
+        }
+    }
+} group by ?artistName
+order by desc(?albums)
 limit 10
 
+14 - Relazione tra visualizzazioni di un video e ascolti della corrispondente canzone su Spotify
 
-
-
-
+select ?songName ?stream ?videoName ?views (round((?stream/?views)*10000)/10000 as ?SVratio) where {
+    ?video sy:isVideoOf ?song;
+           sy:views ?views;
+           sy:videoTitle ?videoName.
+	?song sy:stream ?stream;
+           sy:trackName ?songName.
+}
+order by (abs(?SVratio-1))
 
