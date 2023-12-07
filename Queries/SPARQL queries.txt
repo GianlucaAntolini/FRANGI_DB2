@@ -1,6 +1,6 @@
 prefix sy: <http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/>
 
-1 - Top 10 song by number of streams
+1 - Top 10 songs by number of streams
 
 select distinct (group_concat(distinct ?aName ; separator=", ") as ?aNames) ?sName ?streams where {
     ?artist sy:published ?song ;
@@ -12,7 +12,7 @@ group by ?sName ?streams
 order by desc (?streams)
 limit 10
 
-2 - Song with max duration for each playlist
+2 - Song with max duration for each playlist, ordered by duration
 
 select distinct ?pName ?sName ?duration where {
     ?song sy:isPartOf ?playlist ;
@@ -31,7 +31,7 @@ select distinct ?pName ?sName ?duration where {
 }
 order by desc (?duration)
 
-3 - Artist that wrote more songs
+3 - Artist that published more songs  
 
 select ?aName (count(?song) as ?nSongs) where{
     ?artist sy:personName ?aName ;
@@ -65,7 +65,7 @@ group by ?aName
 order by desc(?streams)
 limit 1
 
-5 - First 10 channels by number of views, with also likes and comments
+5 - Top 10 channels by number of views, with also likes and comments 
 
 select distinct (sum(?views) as ?totalViews) (sum(?likes) as ?totalLikes) (sum(?comments) as ?totalComments) ?name where{
     ?video rdf:type sy:YoutubeVideo;
@@ -80,7 +80,7 @@ group by ?name
 order by desc(?totalViews)
 limit 10
 
-6 - The playlist with most song is the one with most streams?
+6 - Is the playlist with most songs the one with most streams? 
 
 ask where{
     {
@@ -107,7 +107,7 @@ ask where{
     filter(?playlist1 = ?playlist2)
 }
 
-7 - Correspondence between artist and genre (by number of songs in a playlist of such genre)
+7 - Correspondence between artist and genre (by number of songs in a playlist of such genre)  
 
 select ?artistName (group_concat(?genre1; separator=" ,") as ?genres) ?n where {
 	{
@@ -144,7 +144,7 @@ select ?artistName (group_concat(?genre1; separator=" ,") as ?genres) ?n where {
 }
 group by ?artistName ?n
 
-8.1 - Most common five genres among playlists
+8 - Most common 5 genres among playlists
 
 select ?genre (count(?playlist) as ?numPlaylists) where {
     ?playlist rdf:type :SpotifyPlaylist;
@@ -154,7 +154,7 @@ group by ?genre
 order by desc(?numPlaylists)
 limit 5
 
-8.2 - Genre of top 5 playlists with most played songs
+9 - Genre of top 5 playlists with most played songs
 
 select ?pName (group_concat(distinct ?gName ; separator = ", ") as ?genres) ?streams where{
 	{ 
@@ -194,155 +194,149 @@ select distinct ?pName ?gName ?streams where{
 }
 limit 5
 
+10 - Random pair of songs that have similar tempo and key (useful for djs)
 
-
-
-GIANLUCA:
-
-1: Random pair of songs that have similar tempo and key (useful for djs)
-
-SELECT ?inputSong ?inputTrackName ?inputKey ?inputTempo ?similarSong ?similarTrackName ?similarKey ?similarTempo
-WHERE {
+select ?inputSong ?inputTrackName ?inputKey ?inputTempo ?similarSong ?similarTrackName ?similarKey ?similarTempo
+where {
   {
     # Get a random song 
-    SELECT ?inputSong ?inputTrackName ?inputKey ?inputTempo
-    WHERE {
+    select ?inputSong ?inputTrackName ?inputKey ?inputTempo
+    where {
       ?inputSong a sy:SpotifySong ;
                  sy:trackName ?inputTrackName ;
                  sy:key ?inputKey ;
                  sy:tempo ?inputTempo .
-    BIND(RAND() AS ?randOrder1)
+    bind(rand() as ?randOrder1)
 	}
-    ORDER BY ?randOrder1
-    LIMIT 1
+    order by ?randOrder1
+    limit 1
   }
 
   # Get all the other songs but ordered randomly
   {
-    SELECT ?similarSong ?similarTrackName ?similarKey ?similarTempo
-    WHERE {
+    select ?similarSong ?similarTrackName ?similarKey ?similarTempo
+    where {
       ?similarSong a sy:SpotifySong ;
                    sy:trackName ?similarTrackName ;
                    sy:key ?similarKey ;
                    sy:tempo ?similarTempo .
 
-    BIND(RAND() AS ?randOrder2)
+    bind(rand() as ?randOrder2)
 	}
-    ORDER BY ?randOrder2
+    order by ?randOrder2
         
     
   }
     #Filters to get matches
-    FILTER (?inputSong != ?similarSong)  # Ensure it's a different song (can happen that they are the same but very rare (different id but name is the same just written differently))
+    filter (?inputSong != ?similarSong)  # Ensure it's a different song (can happen that they are the same but very rare (different id but name is the same just written differently))
     # Threshold for key and tempo can be changed
-  FILTER (ABS(?inputKey - ?similarKey) < 2)  
-  FILTER (ABS(?inputTempo - ?similarTempo) < 5.0)
+  filter (abs(?inputKey - ?similarKey) < 2)  
+  filter (abs(?inputTempo - ?similarTempo) < 5.0)
 }
 #Just keep one result (the first)
-LIMIT 1
+limit 1
 
-2: Average number of views of songs for the 3 types of Album types
+11 - Average number of views of songs for the 3 types of album types (single, compilation and album)  
 
-SELECT ?albumType (AVG(?streams) AS ?averageStreams) WHERE {
+select ?albumType (avg(?streams) as ?averageStreams) where {
   ?artist sy:published ?song ;
           sy:personName ?aName .
   ?song sy:trackName ?sName ;
         sy:stream ?streams .
-  OPTIONAL {
+  optional {
     ?song sy:belongsTo ?album .
     ?album sy:albumType ?albumType .
   }
 }
-GROUP BY ?albumType
-ORDER BY DESC(?averageStreams)
+roup by ?albumType
+order by desc(?averageStreams)
 
 
-3: In average, are n of streams of a song higher than the n of views of their related yt video?
+12 - Are number of streams of a song higher than the number of views of their related youtube video (in general)?  
 
-ASK
-WHERE {
+ask
+where {
   {
-    SELECT (COUNT(?youtubeVideo) AS ?numVideosMoreViews)
-    WHERE {
+    select (count(?youtubeVideo) as ?numVideosMoreViews)
+    where {
       ?youtubeVideo sy:isVideoOf ?spotifySong .
       ?youtubeVideo sy:views ?views .
       ?spotifySong sy:stream ?streams .
-      FILTER (?views > ?streams)
+      filter (?views > ?streams)
     }
   }
   {
-    SELECT (COUNT(?youtubeVideo) AS ?numVideosLessViews)
-    WHERE {
+    select (count(?youtubeVideo) as ?numVideosLessViews)
+    where {
       ?youtubeVideo sy:isVideoOf ?spotifySong .
       ?youtubeVideo sy:views ?views .
       ?spotifySong sy:stream ?streams .
-      FILTER (?views < ?streams)
+      filter (?views < ?streams)
     }
   }
-  FILTER (?numVideosLessViews > ?numVideosMoreViews)
+  filter (?numVideosLessViews > ?numVideosMoreViews)
 }
 
-4: Average ratios of Views/Likes and Views/Comments of licensed and unlicensed YoutubeVideos
+13 - Average ratios of views/likes and views/comments of videos that are the official video of the songs and the ones that are not  
 
-SELECT ?avgRatioVLLicensed ?avgRatioVLUnlicensed ?avgRatioVCLicensed ?avgRatioVCUnlicensed
-WHERE {
+select ?avgRatioVLOfficial ?avgRatioVLUnofficial ?avgRatioVCOfficial ?avgRatioVCUnofficial
+where {
   {
-    SELECT (AVG(?viewsLicensed/?likesLicensed) AS ?avgRatioVLLicensed)
-    WHERE {
-      ?youtubeVideo sy:licensed true.
-      ?youtubeVideo sy:views ?viewsLicensed.
-      ?youtubeVideo sy:likes ?likesLicensed.
+    select (avg(?viewsOfficial/?likesOfficial) as ?avgRatioVLOfficial)
+    where {
+      ?youtubeVideo sy:officialVideo true.
+      ?youtubeVideo sy:views ?viewsOfficial.
+      ?youtubeVideo sy:likes ?likesOfficial.
     }
   }
   {
-    SELECT (AVG(?viewsUnlicensed/?likesUnlicensed) AS ?avgRatioVLUnlicensed)
-    WHERE {
-      ?youtubeVideo sy:licensed false.
-      ?youtubeVideo sy:views ?viewsUnlicensed.
-      ?youtubeVideo sy:likes ?likesUnlicensed.
+    select (avg(?viewsUnofficial/?likesUnofficial) as ?avgRatioVLUnofficial)
+    where {
+      ?youtubeVideo sy:officialVideo false.
+      ?youtubeVideo sy:views ?viewsUnofficial.
+      ?youtubeVideo sy:likes ?likesUnofficial.
     }
   }
     
     {
-    SELECT (AVG(?viewsLicensed/?commentsLicensed) AS ?avgRatioVCLicensed)
-    WHERE {
-      ?youtubeVideo sy:licensed true.
-      ?youtubeVideo sy:views ?viewsLicensed.
-      ?youtubeVideo sy:comments ?commentsLicensed.
+    select (avg(?viewsOfficial/?commentsOfficial) as ?avgRatioVCOfficial)
+    where {
+      ?youtubeVideo sy:officialVideo true.
+      ?youtubeVideo sy:views ?viewsOfficial.
+      ?youtubeVideo sy:comments ?commentsOfficial.
     }
   }
     {
-    SELECT (AVG(?viewsUnlicensed/?commentsUnlicensed) AS ?avgRatioVCUnlicensed)
-    WHERE {
-      ?youtubeVideo sy:licensed false.
-      ?youtubeVideo sy:views ?viewsUnlicensed.
-      ?youtubeVideo sy:comments ?commentsUnlicensed.
+    select (avg(?viewsUnofficial/?commentsUnofficial) as ?avgRatioVCUnofficial)
+    where {
+      ?youtubeVideo sy:officialVideo false.
+      ?youtubeVideo sy:views ?viewsUnofficial.
+      ?youtubeVideo sy:comments ?commentsUnofficial.
     }
   }
 }
 
-5: Top 10 YoutubeChannel by average of views on the YoutubeVideos they uploaded, with total n of views, likes, comments, and streams of the corresponding SpotifySongs
+14 - Top 10 channels by average of views on the videos they uploaded, with total number of views, likes, comments, and streams of the corresponding songs (simile alla 5, vedere quale tenere) 
 
-
-SELECT
+select
   ?channel ?channelName
-  (COUNT(?video) AS ?numVideos)
-  (SUM(?views) AS ?totalViews)
-  (SUM(?likes) AS ?totalLikes)
-  (SUM(?comments) AS ?totalComments)
-  (SUM(?stream) AS ?totalStreams)
-WHERE {
+  (count(?video) as ?numVideos)
+  (sum(?views) as ?totalViews)
+  (sum(?likes) as ?totalLikes)
+  (sum(?comments) as ?totalComments)
+  (sum(?stream) as ?totalStreams)
+where {
   ?video sy:isUploadedBy ?channel.
   ?channel sy:channelName ?channelName.
-  OPTIONAL { ?video sy:views ?views }
-  OPTIONAL { ?video sy:likes ?likes }
-  OPTIONAL { ?video sy:comments ?comments }
+  optional { ?video sy:views ?views }
+  optional { ?video sy:likes ?likes }
+  optional { ?video sy:comments ?comments }
   ?video sy:isVideoOf ?spotifySong .
   ?spotifySong sy:stream ?stream .
 }
-GROUP BY ?channel ?channelName
-ORDER BY DESC(?totalViews/?numVideos)
-LIMIT 10
+group by ?channel ?channelName
+order by desc(?totalViews/?numVideos)
+limit 10
 
 
 
