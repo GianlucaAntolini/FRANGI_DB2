@@ -4,14 +4,14 @@ This project consists of creating a RDF graph that stores informations about vir
 
 We first designed and created the ontology for the data using Protegè, then we created the RDF graph using RDFlib library for Python and we eventually wrote some queries that retrieve some useful/interesting data and statistics from the database.
 
-** Datasets **:
+**Datasets**:
 
 https://www.kaggle.com/datasets/salvatorerastelli/spotify-and-youtube
 
 https://www.kaggle.com/datasets/sujaykapadnis/spotify-songs
 
 
-** Info **:
+**Info**
 
  - Steps/order to generate the data to be imported in GraphDB:
     1 run dataMergeScript.ipynb
@@ -19,7 +19,7 @@ https://www.kaggle.com/datasets/sujaykapadnis/spotify-songs
  - As number of streams we took the maximum value when there were multiple values for the same video. We generated top level genres and subgenres by looking at the names of all the genres.
  - The datasets (in the Datasets/Original folder) have been merged in a single file called complete_dataset.csv (in the Datasets/Computed folder). To create this file we created a script called dataMergeScript.ipynb in which we match the Spotify track ids of the songs and keep the information from both files.
  
-** Queries **:
+**Queries**
 
 The following are the queries that we decided to create:  
    1 - Top 10 songs by number of streams  
