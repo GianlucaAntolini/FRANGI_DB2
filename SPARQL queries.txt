@@ -282,6 +282,70 @@ WHERE {
   FILTER (?numVideosLessViews > ?numVideosMoreViews)
 }
 
+4: Average ratios of Views/Likes and Views/Comments of licensed and unlicensed YoutubeVideos
+
+SELECT ?avgRatioVLLicensed ?avgRatioVLUnlicensed ?avgRatioVCLicensed ?avgRatioVCUnlicensed
+WHERE {
+  {
+    SELECT (AVG(?viewsLicensed/?likesLicensed) AS ?avgRatioVLLicensed)
+    WHERE {
+      ?youtubeVideo sy:licensed true.
+      ?youtubeVideo sy:views ?viewsLicensed.
+      ?youtubeVideo sy:likes ?likesLicensed.
+    }
+  }
+  {
+    SELECT (AVG(?viewsUnlicensed/?likesUnlicensed) AS ?avgRatioVLUnlicensed)
+    WHERE {
+      ?youtubeVideo sy:licensed false.
+      ?youtubeVideo sy:views ?viewsUnlicensed.
+      ?youtubeVideo sy:likes ?likesUnlicensed.
+    }
+  }
+    
+    {
+    SELECT (AVG(?viewsLicensed/?commentsLicensed) AS ?avgRatioVCLicensed)
+    WHERE {
+      ?youtubeVideo sy:licensed true.
+      ?youtubeVideo sy:views ?viewsLicensed.
+      ?youtubeVideo sy:comments ?commentsLicensed.
+    }
+  }
+    {
+    SELECT (AVG(?viewsUnlicensed/?commentsUnlicensed) AS ?avgRatioVCUnlicensed)
+    WHERE {
+      ?youtubeVideo sy:licensed false.
+      ?youtubeVideo sy:views ?viewsUnlicensed.
+      ?youtubeVideo sy:comments ?commentsUnlicensed.
+    }
+  }
+}
+
+5: Top 10 YoutubeChannel by average of views on the YoutubeVideos they uploaded, with total n of views, likes, comments, and streams of the corresponding SpotifySongs
+
+
+SELECT
+  ?channel ?channelName
+  (COUNT(?video) AS ?numVideos)
+  (SUM(?views) AS ?totalViews)
+  (SUM(?likes) AS ?totalLikes)
+  (SUM(?comments) AS ?totalComments)
+  (SUM(?stream) AS ?totalStreams)
+WHERE {
+  ?video sy:isUploadedBy ?channel.
+  ?channel sy:channelName ?channelName.
+  OPTIONAL { ?video sy:views ?views }
+  OPTIONAL { ?video sy:likes ?likes }
+  OPTIONAL { ?video sy:comments ?comments }
+  ?video sy:isVideoOf ?spotifySong .
+  ?spotifySong sy:stream ?stream .
+}
+GROUP BY ?channel ?channelName
+ORDER BY DESC(?totalViews/?numVideos)
+LIMIT 10
+
+
+
 
 
 

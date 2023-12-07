@@ -21,8 +21,9 @@ Andrea:
 Gianluca:
  1 - Random pair of songs that have similar tempo and key (useful for djs)
  2 - Average number of views of songs for the 3 types of Album types
- 3 - In average, are n of streams of a song higher than the n of views of their related yt video?
- 4 - 
+ 3 - Are n of streams of a song higher than the n of views of their related yt video (in general)?
+ 4 - Average ratios of Views/Likes and Views/Comments of licensed and unlicensed YoutubeVideos
+ 5 - Top 10 YoutubeChannel by average of views on the YoutubeVideos they uploaded, with total n of views, likes, comments, and streams of the corresponding SpotifySongs
 
 Insieme:
  1 - Relazione tra visualizzazioni di un video e ascolti della corrispondente canzone su Spotify
