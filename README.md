@@ -29,29 +29,17 @@ https://www.kaggle.com/datasets/sujaykapadnis/spotify-songs
 
 The following are the queries that we decided to create:  
    1 - Top 10 songs by number of streams  
-   2 - Song with max duration for each playlist, ordered by duration  
-   3 - Artist that published more songs  
+   2 - Song with max duration for each playlist, ordered by duration   
+   3 - How many artists published n songs  
    4 - Artist that produced the most streams  
-   5 - Top 10 channels by number of views, with also likes and comments  
+   5 - Top 10 channels by number of views, with also likes and comments    
    6 - Is the playlist with most songs the one with most streams?  
-   7 - Correspondence between artist and genre (by number of songs in a playlist of such genre)  
-   8 - Most common 5 genres among playlists  
-   9 - Genre of top 5 playlists with most played songs
-   10 - Random pair of songs that have similar tempo and key (useful for djs)  
-   11 - Average number of views of songs for the 3 types of album types (single, compilation and album)  
-   12 - Are number of streams of a song higher than the number of views of their related youtube video (in general)?  
-   13 - Average ratios of views/likes and views/comments of videos that are the official video of the songs and the ones that are not  
-   14 - Top 10 channels by average of views on the videos they uploaded, with total number of views, likes, comments, and streams of the corresponding songs (simile alla 5, vedere quale tenere)
-   15 - Top 10 Artists by number of Albums published
+   7 - Most common 5 genres among playlists  
+   8 - Genre of top 5 playlists with most played songs      
+   9 - Random pair of songs that have similar tempo and key (useful for djs)  
+   10 - Average number of views of songs for the 3 types of album types (single, compilation and album)  
+   11 - Are number of streams of a song higher than the number of views of their related youtube video (in general)?  
+   12 - Average ratios of views/likes and views/comments of videos that are the official video of the songs and the ones that are not  
+   13 - Top 10 artists by number of albums published  
+   14 - Relation between YouTube video views and corresponding song  
 
-   14 - Relazione tra visualizzazioni di un video e ascolti della corrispondente canzone su Spotify
-...
-
- 
-**TODO:**
-Gianluca:
-	- fix readme
-	- fix folders/files
-	- pdf of queries
-Andrea:
-	- jupyter notebook

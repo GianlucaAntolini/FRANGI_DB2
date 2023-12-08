@@ -31,7 +31,7 @@ select distinct ?pName ?sName ?duration where {
 }
 order by desc (?duration)
 
-3 - How many Artists published x songs
+3 - How many artists published n songs
 
 select (count(?artist) as ?nArtists) ?songs where{
     {
@@ -247,7 +247,7 @@ where {
   }
 }
 
-13 - Top 10 Artists by number of Albums published
+13 - Top 10 artists by number of albums published
 
 select ?artistName (count(?album) as ?albums) where{
     {
@@ -263,7 +263,7 @@ select ?artistName (count(?album) as ?albums) where{
 order by desc(?albums)
 limit 10
 
-14 - Relazione tra visualizzazioni di un video e ascolti della corrispondente canzone su Spotify
+14 - Relation between YouTube video views and corresponding song
 
 select ?songName ?stream ?videoName ?views (round((?stream/?views)*10000)/10000 as ?SVratio) where {
     ?video sy:isVideoOf ?song;
