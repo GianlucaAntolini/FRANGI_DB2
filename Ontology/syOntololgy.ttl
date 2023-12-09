@@ -452,9 +452,16 @@ xsd:date rdf:type rdfs:Datatype .
 
 ###  http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/YoutubeVideo
 :YoutubeVideo rdf:type owl:Class ;
-              owl:equivalentClass [ rdf:type owl:Restriction ;
-                                    owl:onProperty :isVideoOf ;
-                                    owl:someValuesFrom :SpotifySong
+              owl:equivalentClass [ owl:intersectionOf ( [ rdf:type owl:Restriction ;
+                                                           owl:onProperty :isUploadedBy ;
+                                                           owl:someValuesFrom :YoutubeChannel
+                                                         ]
+                                                         [ rdf:type owl:Restriction ;
+                                                           owl:onProperty :isVideoOf ;
+                                                           owl:someValuesFrom :SpotifySong
+                                                         ]
+                                                       ) ;
+                                    rdf:type owl:Class
                                   ] ;
               rdfs:comment "Class of the Youtube Videos related to a Spotify Song." .
 
