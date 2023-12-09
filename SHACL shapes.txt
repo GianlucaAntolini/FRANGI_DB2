@@ -1,0 +1,209 @@
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh:    <http://www.w3.org/ns/shacl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sy:    <http://www.dei.unipd.it/Database2/FRANGI/spotifyYoutubeStatistics/> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix ex:    <http://www.example.com/ns#> .
+
+ex:AlbumShape
+    a sh:NodeShape ;
+    sh:targetClass sy:Album ;
+    sh:property [
+	sh:path sy:albumName ;
+	sh:datatype xsd:string ;
+	sh:maxCount 1 ;
+	sh:minCount 1 ;
+    ] ;
+    sh:property [
+	sh:path sy:albumType ;
+	sh:datatype xsd:string ;
+	sh:maxCount 1 ;
+	sh:minCount 1 ;
+    ] ;
+    sh:property [
+	sh:path sy:isComposed ;
+	sh:minCount 1 ;
+    ] ;
+.
+
+ex:SongShape
+    a sh:NodeShape ;
+    sh:targetClass sy:SpotifySong ;
+    sh:property [
+	sh:path sy:trackName ;
+	sh:datatype xsd:string ;
+	sh:maxCount 1 ;
+	sh:minCount 1 ;
+    ] ;
+    sh:property [
+	sh:path sy:acousticness ;
+	sh:datatype xsd:float ;
+	sh:maxCount 1 ;
+    ] ;
+    sh:property [
+	sh:path sy:danceability ;
+	sh:datatype xsd:float ;
+	sh:maxCount 1 ;
+    ] ;
+    sh:property [
+	sh:path sy:duration ;
+	sh:datatype xsd:integer ;
+	sh:maxCount 1 ;
+    ] ;
+    sh:property [
+	sh:path sy:energy ;
+	sh:datatype xsd:float ;
+	sh:maxCount 1 ;
+    ] ;
+    sh:property [
+	sh:path sy:instrumentalness ;
+	sh:datatype xsd:float ;
+	sh:maxCount 1 ;
+    ] ;
+    sh:property [
+	sh:path sy:key ;
+	sh:datatype xsd:integer ;
+	sh:maxCount 1 ;
+    ] ;
+    sh:property [
+	sh:path sy:liveliness ;
+	sh:datatype xsd:float ;
+	sh:maxCount 1 ;
+    ] ;
+    sh:property [
+	sh:path sy:loudness ;
+	sh:datatype xsd:float ;
+	sh:maxCount 1 ;
+    ] ;
+    sh:property [
+	sh:path sy:speechiness ;
+	sh:datatype xsd:float ;
+	sh:maxCount 1 ;
+    ] ;
+    sh:property [
+	sh:path sy:stream ;
+	sh:datatype xsd:integer ;
+	sh:maxCount 1 ;
+    ] ;
+    sh:property [
+	sh:path sy:tempo ;
+	sh:datatype xsd:float ;
+	sh:maxCount 1 ;
+    ] ;
+    sh:property [
+	sh:path sy:valence ;
+	sh:datatype xsd:float ;
+	sh:maxCount 1 ;
+    ] ;
+    sh:property [
+	sh:path [ sh:inversePath sy:isComposed ; ] ;
+	sh:maxCount 1 ;
+    ] ;
+.
+
+ex:ArtistShape
+    a sh:NodeShape ;
+    sh:targetClass sy:Artist ;
+    sh:property [
+	sh:path sy:personName ;
+	sh:datatype xsd:string ;
+	sh:maxCount 1 ;
+	sh:minCount 1 ;
+    ] ;
+    sh:property [
+	sh:path sy:published ;
+	sh:minCount 1 ;
+    ] ;
+.
+
+ex:VideoShape
+    a sh:NodeShape ;
+    sh:targetClass sy:YoutubeVideo ;
+    sh:property [
+	sh:path sy:videoTitle ;
+	sh:datatype xsd:string ;
+	sh:maxCount 1 ;
+	sh:minCount 1 ;
+    ] ;
+    sh:property [
+	sh:path sy:comments ;
+	sh:datatype xsd:integer ;
+	sh:maxCount 1 ;
+    ] ;
+    sh:property [
+	sh:path sy:description ;
+	sh:datatype xsd:string ;
+	sh:maxCount 1 ;
+    ] ;
+    sh:property [
+	sh:path sy:licensed ;
+	sh:datatype xsd:boolean ;
+	sh:maxCount 1 ;
+    ] ;
+    sh:property [
+	sh:path sy:likes ;
+	sh:datatype xsd:integer ;
+	sh:maxCount 1 ;
+    ] ;
+    sh:property [
+	sh:path sy:officialVideo ;
+	sh:datatype xsd:boolean ;
+	sh:maxCount 1 ;
+    ] ;
+    sh:property [
+	sh:path sy:views ;
+	sh:datatype xsd:integer ;
+	sh:maxCount 1 ;
+    ] ;
+    sh:property [
+	sh:path sy:isUploadedBy ;
+	sh:minCount 1 ;
+	sh:maxCount 1 ;
+    ] ;
+    sh:property [
+	sh:path sy:isVideoOf ;
+	sh:minCount 1 ;
+    ] ;
+.
+
+ex:ChannelShape
+    a sh:NodeShape ;
+    sh:targetClass sy:YoutubeChannel ;
+    sh:property [
+	sh:path sy:channelName ;
+	sh:datatype xsd:string ;
+	sh:maxCount 1 ;
+	sh:minCount 1 ;
+    ] ;
+    sh:property [
+	sh:path sy:upload ;
+	sh:minCount 1 ;
+    ] ;
+.
+
+ex:PlaylistShape
+    a sh:NodeShape ;
+    sh:targetClass sy:SpotifyPlaylist ;
+    sh:property [
+	sh:path sy:playlistName ;
+	sh:datatype xsd:string ;
+	sh:maxCount 1 ;
+	sh:minCount 1 ;
+    ] ;
+    sh:property [
+	sh:path sy:hasGenre ;
+	sh:minCount 1 ;
+    ] ;
+.
+
+ex:GenreShape
+    a sh:NodeShape ;
+    sh:targetClass sy:Genre ;
+    sh:property [
+	sh:path sy:genreName ;
+	sh:datatype xsd:string ;
+	sh:maxCount 1 ;
+	sh:minCount 1 ;
+    ] ;
+.
