@@ -38,12 +38,12 @@ The following are the queries that we decided to create:
    4 - Artist that produced the most streams  
    5 - Top 10 channels by number of views, with also likes and comments    
    6 - Is the playlist with most songs the one with most streams?  
-   7 - Most common 5 genres among playlists  
+   /7 - Most common 5 genres among playlists  
    8 - Genre of top 5 playlists with most played songs      
    9 - Random pair of songs that have similar tempo and key (useful for djs)  
-   10 - Average number of views of songs for the 3 types of album types (single, compilation and album)  
+   /10 - Average number of views of songs for the 3 types of album types (single, compilation and album)  
    11 - Are number of streams of a song higher than the number of views of their related youtube video (in general)?  
-   12 - Average ratios of views/likes and views/comments of videos that are the official video of the songs and the ones that are not  
+   /12 - Average ratios of views/likes and views/comments of videos that are the official video of the songs and the ones that are not  
    13 - Top 10 artists by number of albums published  
    14 - Relation between YouTube video views and corresponding song  
    
